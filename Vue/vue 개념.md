@@ -24,6 +24,7 @@ Vue Router
 Vue Template
 
 ## 1.뷰 인스턴스
+<pre><code>
 New Vue({
           el : //인스턴스가 뿌려질 지점
           template://인스 턴스의 화면 내용 
@@ -31,11 +32,14 @@ New Vue({
          methods: //인스턴스의 이벤트정의 
          created: //인스턴스 라이플 사이클
 });
+</code></pre>
+
 
 뷰로 화면을 개발할때 필수로 생성해야 하는 단위
 
 ## 2.뷰 컴포넌트
 화면을 구조적으로 설계하기 위한 요소
+<pre><code>
 Vue.compont(‘my-cmp’,{  
   //인스턴스 옵션 속성과 동일
     template://인스턴스 화면내용 
@@ -43,9 +47,10 @@ Vue.compont(‘my-cmp’,{
     methods://인스턴스의 이벤트 정의
     created : //인스턴스 라이프사이클
 });
-
+</pre></code>
 ## 3.뷰라우터
 여러개의 화면간에 이동하는 방법
+<pre><code>
 var Main = {template: '<div>main</div>'};
 var Login ={template:'<div><login/div>'};
 
@@ -58,20 +63,23 @@ var router =new VueRouter{{
     ]
 
 });
-
+</pre></code>
+<pre><code>
 var app =new Vue({
     el:'#app',
     router:router
 });
-
+</pre></code>
 ## 4.뷰 템플릿
 화면을 구체적으로 꾸미는 방법&문법
+<pre><code>
 {{message}},
 {{message.split('').reverse().join('')}}
 <p v-bind:id="uid">인스턴스의 값과 연결</p>
 <a v-if="seen">seen 값에 따라 표시 여부 결정</a>
 <ul v-for="item in items">{{item.name}}</ul>
 <button v-on:click="pAlert">클릭하면 경고창 표시</button>
+</pre></code>
 
 뷰 인스턴스 생성 -> 뷰 컴포넌트 설게 및 생성 -> 뷰 컴포넌트 내용구현
 

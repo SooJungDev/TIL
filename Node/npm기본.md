@@ -16,10 +16,12 @@ Package.json 새성
 *  프로젝트의 node module 들 관리를 위한 package.json 설정
 *  -y를 붙이면 default 정보를 가지고 package.json 생성
   
-<pre><code>
-	npm init   
-	npm init -y
-</code></pre>
+<pre>
+<code>
+npm init   
+npm init -y
+</code>
+</pre>
 
 패키지 설치 및 업데이트
 * 프로젝트에서 사용 할 node module 설치 및 package.json 업데이트
@@ -30,8 +32,8 @@ npm I 패키지명 —save.
 Global 설치 vs Local 설치. 
   
 <pre><code>
-	npm install gulp -global
-	npm install gulp 
+npm install gulp -global
+npm install gulp 
 </code></pre>
 
 
@@ -47,7 +49,7 @@ Install —save vs —save-dev.
 * —save는 앱이 구동하기 위해 필요한 모듈 & 라이브러리 설치 ex) react, vue
   
 <pre><code>
-	//package.json
+//package.json
 “dependencies”:{
     “vue”:”^2.3.3”
     ...
@@ -58,7 +60,7 @@ Install —save vs —save-dev.
 *  —save -dev는 앱 개발 시 필요한 모듈& 라이브러리 설치 ex)test,build tool, live reloading
   
 <pre><code>
-	// package.json
+// package.json
 “devDependencies”:{
     “gulp”: “^3.9.1”,
     ….

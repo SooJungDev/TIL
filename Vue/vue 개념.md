@@ -90,7 +90,7 @@ Object.defineProperty를 사용하여 getter/setter로 변환합니다. 이는 v
 getter/setter 는 사용자에게 보이지 않으나 속성에 엑세스 하거나 수정할때 뷰가 종속성 추적 및 변경 알림을 수행 할 수있음
 모든 컴포넌트 인스턴스에는 해당 watcher 인스턴스가 있으며 이 인스턴스는 컴포넌트 종속적으로 렌더링 되는 동안 “수정”된 모든 속성을 
 기록합니다. 나중에 종속적인 setter가  트리거 되면 watcher에 알리고 컴포넌트가 다시 렌더링됩니다. 
-![2018-06-07 4 21 46](https://user-images.githubusercontent.com/38197944/41890524-d48dfa7c-794a-11e8-992d-60a75f5e4d6e.png)
+![2018-06-07 4 27 41](https://user-images.githubusercontent.com/38197944/41890612-3718fa3e-794b-11e8-8fa8-cd5e1c39b800.png)
 
 
 ## 참고링크

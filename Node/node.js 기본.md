@@ -119,8 +119,8 @@ app.listen(8080, function(){
  vscode 에서 종료시킬때 터미널에서 ctrl+c 누름
 
  ## 참고사이트
- 빠르게 배우는 Node.js와 NPM 설치부터 개념잡기 : https://kdydesign.github.io/2017/07/15/nodejs-npm-tutorial/
- node.js 이해하기 : http://programmingsummaries.tistory.com/328
- node.js 란 무엇인가? : http://asfirstalways.tistory.com/43
- node.js gizip 압축 적용: http://inspiredjw.com/entry/Expressjs%EC%97%90-Gzip-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0
- node-http-server: https://mylko72.gitbooks.io/node-js/content/index.html
+ * 빠르게 배우는 Node.js와 NPM 설치부터 개념잡기 : https://kdydesign.github.io/2017/07/15/nodejs-npm-tutorial/  
+ * node.js 이해하기 : http://programmingsummaries.tistory.com/328  
+ * node.js 란 무엇인가? : http://asfirstalways.tistory.com/43  
+ * node.js gizip 압축 적용: http://inspiredjw.com/entry/Expressjs%EC%97%90-Gzip-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0
+ * node-http-server: https://mylko72.gitbooks.io/node-js/content/index.html

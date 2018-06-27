@@ -88,7 +88,7 @@ release한 브랜치를 두고서 보안상 문제가 발생하거나 백포트�
 
 
 
-#fork 한 프로젝트를 최신상태로 유지하기
+## fork 한 프로젝트를 최신상태로 유지하기
 - 소스트리 기준
 1.원격(remote)를 추가해준다
 remote 옆 new remote 클릭 또는 새원격 클릭
@@ -104,5 +104,5 @@ remote 옆 new remote 클릭 또는 새원격 클릭
 5.최신상태로 업데이트되고 업데이트 된것을 자신의 저장소로 push
 
 ## 참고사이트
-[pull request 하는법](https://medium.com/axisj/github-fork-%EC%97%90%EC%84%9C-pull-request-%EA%B9%8C%EC%A7%80-%EA%B7%B8%EB%A6%AC%EA%B3%A0-merge-a22bdd097283)
-[브랜치전략 자세히나옴](https://ujuc.github.io/2015/12/16/git-flow-github-flow-gitlab-flow/)
+- [pull request 하는법](https://medium.com/axisj/github-fork-%EC%97%90%EC%84%9C-pull-request-%EA%B9%8C%EC%A7%80-%EA%B7%B8%EB%A6%AC%EA%B3%A0-merge-a22bdd097283)
+- [브랜치전략 자세히나옴](https://ujuc.github.io/2015/12/16/git-flow-github-flow-gitlab-flow/)

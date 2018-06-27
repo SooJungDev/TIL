@@ -35,7 +35,7 @@ app.listen(8080, function(){
 ## Node.js의 특징
  event-driven, non-blocking I/O model
   - Node.js 위에서 실행되는 API 는 모두 비동기 방식으로 실행된다. 
-
+<pre><code>
   //server.js
   app.get(function(){
      //
@@ -44,8 +44,9 @@ app.listen(8080, function(){
   app.post(function(){
     //
   });
+</code></pre>  
 
- - 장점
+ 장점     
  1.v8 Engine이다. 
  구글 크롬 내장엔진 => 자바스크립트 엔진으로 실행됨. 
 

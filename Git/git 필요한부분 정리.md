@@ -88,13 +88,12 @@ release한 브랜치를 두고서 보안상 문제가 발생하거나 백포트�
 
 
 
-## fork 한 프로젝트를 최신상태로 유지하기
-- 소스트리 기준  
+## fork 한 프로젝트를 최신상태로 유지하기(소스트리 기준)
 
 1.원격(remote)를 추가해준다
 remote 옆 new remote 클릭 또는 새원격 클릭
 
-2. 원격이름을 upstream으로해주고 소스트리 github 계정을 연결해 놓았을 경우 지구본 모양을 클릭하면 
+2.원격이름을 upstream으로해주고 소스트리 github 계정을 연결해 놓았을 경우 지구본 모양을 클릭하면 
    원본 git url 클릭하거나 연결되지 않았을때 원본 git 주소를 입력해줌
 
 3.upstream 옆에 pull from upstream 또는 upstream에서 가져와 병합하기 클릭

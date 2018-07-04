@@ -31,3 +31,5 @@ Hashtable과 ConcurrentHashMap의 차이점은 멀티 스레드 환경에서 사
 ConcurrentHashMap은 세그먼테이션 개념을 도입했기 때문에 스레드 안전을 제공하기 위해 특정 부분만 잠겨 있기 때문에 다른 사용자가 반복을 기다리지 않고도 맵에 액세스 할수 있음.    
 요약하면 ConcurrentHashMap은 맵의 특정 부분만 잠그고 Hashtable은 반복을 수행하는 동안 전체 맵을 잠군다.
 
+## 참고 사이트
+https://javarevisited.blogspot.com/2011/04/difference-between-concurrenthashmap.html

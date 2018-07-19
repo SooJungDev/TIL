@@ -158,3 +158,9 @@ self.addEventListener('activate',function(event){
 - 주소창에 chrome://serviceworker-internals
 - 주의사항: 등록 과정에서 실패하였더라도 콘솔에 로그 찍히지않는 경우가 생기니
     - event.waitIntil() 내부 콜백 로직 확인 
+    
+## 참고사이트
+https://developers.google.com/web/fundamentals/primers/service-workers/
+https://github.com/w3c/ServiceWorker/blob/master/explainer.md
+https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage
+https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage

@@ -1,3 +1,4 @@
+인프런 강의듣고 정리 
 ## 동적 계획법
 1. 일반적으로 최적화문제 (optimisation problem) 혹은 카운팅(counting)문제에 적용됨
 2. 주어진 문제에 대한 순환식(recurrence equation)을 정의한다.

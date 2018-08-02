@@ -74,9 +74,8 @@ vm.a = 2 // => new: 2, old: 1
   
 
 
-##참고사이트
-
-https://kr.vuejs.org/v2/guide/computed.html  
-http://hong.adfeel.info/frontend/%EA%B3%84%EC%82%B0%EB%90%9C-%EC%86%8D%EC%84%B1computed-%EA%B0%90%EC%8B%9C%EC%9E%90watch/
+## 참고사이트
+- [vue.js 사이트](https://kr.vuejs.org/v2/guide/computed.html)
+- [computed ,method 차이점](http://hong.adfeel.info/frontend/%EA%B3%84%EC%82%B0%EB%90%9C-%EC%86%8D%EC%84%B1computed-%EA%B0%90%EC%8B%9C%EC%9E%90watch/)
 
 

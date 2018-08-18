@@ -39,11 +39,12 @@ use_jumbo_build = true
 
 빌드하기
 ~~~shell
-ninja -C out/Debug chrome ~~~
+ninja -C out/Debug chrome 
+~~~
 
 # 실행
 Run
-~~~shell
+~~~ shell
 ./out/Debug/Chromium.app/Contents/MacOS/Chromium 
 ~~~
 

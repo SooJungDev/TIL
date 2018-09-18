@@ -36,6 +36,7 @@ Change-Id: I910244a9a50ff89b2979e9942e619752bbc319b1
 - git log(현재 commit 내역을 본다 )
 - git cl upload(코드 업로드)
 - git cl format (코드 포맷팅)
+- git pull 은 크로미움 코드를 다운 받는다고 생각, gclient sync 는 코드에 dependency한 코드를 다운
 
 ## 순서
 1. grep으로 수정할 파일을 위치를 찾고

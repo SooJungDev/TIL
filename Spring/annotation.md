@@ -7,6 +7,11 @@
 @RestController
 * Spring4.0 @Controller 와 @ResponseBody를 합쳐놓은 @RestController 추가
 *  @ResponseBody 모든 요청 매핑 메소드에 추가할 필요가없음
+* 특정 객체 리턴시 자동으로 JSON 오브젝트로 마샬링하여 Response 하게 됨
+
+
+
+출처: http://jinhokwon.tistory.com/6?category=619369 [I am]
 
 @GetMapping
 * @RequestMapping(Method=RequestMethod.GET)과 같음

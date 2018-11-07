@@ -124,6 +124,15 @@ public abstract class BaseTimeEntity {
    - Entity가 생성되어 저장 될때 시간이 자동 저장
  - @LastModifiedDate
   - 조회한 Entity값을 변경 할때 시간이 자동저장됨
+  
+## service 메소드는 entity를 바로 받지 않는다.
+- controller와 service 역할을 분리해줘야함
+- 비지니스 로직 & 트랜잭션 관리는 모두 service에서 함
+- view와 관련된 부분 controller에서 담당하도록한다
+- 트랜잭션??
+  - DB 데이터를 등록.수정.삭제 하는 service 메소드는 @Transactional을 필수적으로 가져감
+  - 메소드 내에서 exception이 발생하면 해당 메소드에서 이루어진 모든 db작업을 초기화시킴
+  
  
 ## 참고사이트
   - 밑에 사이트를 보고 천천히 따라해보고 정리함.. 정말잘되있음

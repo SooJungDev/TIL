@@ -1,3 +1,23 @@
+## EC2
+- 가장 먼저 생성되고 범용적인 서비스임
+
+## 인스턴스
+- 컴퓨터 한대가 인스턴스라고 볼수있음
+- ex) 3개의 인스턴스 3개의 컴퓨터 사용하는 뜻과 동일
+
+## 생성해보기
+- 우분투 선택
+- 제일 기본으로 선택되어있는거 선택
+- 다음 인스턴스 세부 정보 구성클릭
+- 다음 스토리지 추가 크기8기가로 설정뒤 태그추가로 이동
+- 이름 추가하고 Name webServer 
+- 보안 그룹 구성 그룹이름에 web server 입력
+- HTTP 규칙 추가후 검토및 시작 클릭
+- 시작클릭 새키페어 생성 awspwd입력 키페어 다운로드
+- pending 은 작업중이라는 뜻 금방 running으로 바꿈
+- 오른쪽 클릭 인스턴스 상태 클릭후 중단 누르면 인스턴스가 삭제됨
+
+
 ## EC2 인스턴스타입
 MS 운영체제 SQL Server 가 있는거 비쌈
 우분투 등등
@@ -47,7 +67,33 @@ MS 운영체제 SQL Server 가 있는거 비쌈
 -윈도우를 선택 한 경우 RDP 포트번호 3389(원격제어)
 - 인스턴스 운영체제에 따라서 원격제어 방법은 달라짐
 
+## EC2 인스턴스 비밀번호 생성 
+- Lauch 버튼 클릭 
+- 비밀번호 지정을 할 수있음   
+- key pair 생성 파일로 저장 비밀번호의 이름을 지정한 다음 다운로드 키페어
+
+## OSX에서 리눅스 인스턴스로 접속 
+- 인스턴스 옆에 오른쪽 클릭 connect 
+- standalon ssh client 클릭 
+- 터미널에 접속 
+- chmod 400 aws_password.pem (400 이파일의 소유자만 파일을 읽을 수 있다는 뜻)
+- 파일 오른쪽 클릭후 정보 가져오기
+- 공유 및 사용권한에서 나자신 읽기전용으로 변경 staff 삭제, everyone 접근 불가로 변경
+- 파일이 위치한 디렉토리에서 chmod 400 aws_password.pem 
+- permission 에러나면 앞에다가 sudo
+- ls -al 쳤을때 -r -------@ 읽기 접근만 있다고나옴 
+- ssh -i "aws_password.pem" ubuntu@ip 주소
+- 접속을 끊고 자기 컴퓨터로 오고 싶을떄 exit
+
+## 리눅스 인스턴스에서 웹서버 사용
+- sudo apt-get install apache2 (아파치 서버 설치)
+- sudo rm index.html
+- sudo nano index.html
+- Security groups :방화벽 inbound rules 추가해줌 
+
+
 ## 참고사이트
+  - [EC2소개](https://opentutorials.org/module/1946/11274)
   - [인스턴스 타입](https://opentutorials.org/module/1946/11275)
   - [가격 정책](https://opentutorials.org/module/1946/11276)
     - [AWS 무료 제공 대상 세부 정보](https://aws.amazon.com/ko/free/)

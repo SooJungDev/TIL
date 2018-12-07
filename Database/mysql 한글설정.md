@@ -10,9 +10,9 @@
 일단 Database 자체에 디폴트 설정을 변경해주는것으로 해결함 
 ~~~
 CREATE DATABASE 데이터베이스이름 default character set utf8
-ALTER DATABASE  데이터베이스이름 character set utf8
-CREATE TABLE 테이블이름 character set utf8
-ALTER TABLE 테이블이름 character set utf8
+ALTER DATABASE  데이터베이스이름 default character set utf8
+CREATE TABLE 테이블이름 default character set utf8
+ALTER TABLE 테이블이름 default character set utf8
 ~~~
 
 

@@ -71,8 +71,8 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 5.maven install 해줌
 
 - 스프링부트 빈을 등록할때 두군데에서 하기 때문에 덮어 써지는 문제가 생길 수 있음
-  - @ComponentScan: 빈을 다 등록한다음에
-  - @EnableAutoConfiguration : 빈을 자동으로 만들어짐 
+  - @ComponentScan: 빈을 스캔해서 다 등록한다음에
+  - @EnableAutoConfiguration : 정보를 바탕으로 원래 있던 빈들에 기존에 있던걸 반영하고 없으면 빈을 자동으로 만들어짐 
 - 덮어 쓰기 방지하기 
   - @ConditionalOnMissingBean
 - 빈 재정의 수고 덜기
@@ -111,5 +111,37 @@ server.port
 랜덤 포트
 ApplicationListner<ServletWebServerInitializedEvent>
 
+## HTTPS와 HTTP2
+- 키스토어 만든뒤 설정해줌
+- HTTPS 설정후 HTTP 로 접속할수가 없음 커넥터가 하나기 떄문에
+- Http2 설정
+ - http2.enable
+ - 사용하는 서블릿 컨테이너 마다 다름
+ - 톰캣8 jdk1.8은 추가적으로 설정해줘야하는게 있으므로 버젼올리는것을 추천
+ 
+ ## 독립적으로 실행 가능한 jar
+  - mvn package를 하면 실행 가능한 jar파일 하나가 새성됨
+  - 그 jar파일 안에 다들어있음
+  - spring-maven-plugin이 해주는 일(패키징) 
+  - 스프링 부트 전략
+   - 내장 jar : 기본적으로 자바에는 내장 jar 로딩하는 표준적인 방법 x
+   - 애플리케이션 클래스와 라이브러리 위치구분함
+   - org.springframework.boot.loader.jar.JarFile 을 사용해서 내장 jar읽는다
+   - org.springframework.boot.loader.Launchar을 사용해서 실행한다 (내장된 라이브러리 jar파일 모두 읽는다)
+   - 단독적인 파일로 실행되는것은 스프링부트의 주요 목적임 
+
+## 스프링부트 원리
+- 의존성 관리(spring-boot-starter)
+  - maven에 parent, dependencies management
+- 자동설정
+  - Springboot 빈을 두단계로 나눠서 읽어서 등록
+    - @ComponentScan: 빈을 스캔해서 다 등록한다음에
+    - @EnableAutoConfiguration : 정보를 바탕으로 jar파일에 들어있는 meta-inf 중에 spring.factories 그안에 들어가있는 autoconfigurationclass 참조해서 자동설정
+      - 원래있던 빈들에 기반을함 자동설정파일을 활용해서 재정의 하거나 설정해야될것을 줄여주고있음
+  
+- 내장 웹서버 (standalone 한 app 만들기위해서 springboot -> 서버아님!! 활용해서 쓰는것뿐)
+- 독립적으로 실행 가능한 jar 
+
+ 
 ## 참고사이트
   - [인프런 강의 자동설정 이해](https://www.inflearn.com/course/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8/%EC%9E%90%EB%8F%99-%EC%84%A4%EC%A0%95-%EC%9D%B4%ED%95%B4/)

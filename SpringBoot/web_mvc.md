@@ -111,6 +111,85 @@ XML 메세지 컨버터 추가하기
  - 템플릿 파일 위치:/src/main/resources/template/
  - [예제](https://github.com/thymeleaf/thymeleafexamples-stsm/blob/3.0-master/src/main/webapp/WEB-INF/templates/seedstartermng.html)
  
+ ## HtmlUnit
+ - Html 템플릿 뷰 테스트를 보다 전문적으로 하자
+ - [htmlunit](http://htmlunit.sourceforge.net/)
+ - [htmlunit 시작하기](http://htmlunit.sourceforge.net/gettingStarted.html)
+ 
+ ~~~java
+    @Autowired
+     WebClient webClient;
+     
+     @Test
+     public void hello() throws Exception {
+         // 요청 "/hello"
+         // 응답
+        HtmlPage page = webClient.getPage("/hello");
+        HtmlHeading1 h1 = page.getFirstByXPath("//h1");
+        assertThat(h1.getTextContent()).isEqualToIgnoringCase("soojung");
+     }
+ ~~~
+ 
+ ## ExceptionHandler
+ 스프링 @MVC 예외 처리 방법
+ - @ControllerAdvice
+ - @ExceptionHandler
+ 
+ 스프링 부트가 제공하는 기본 예외 처리기
+ - BasicErrorController
+  - Html과 json 응답 지원
+ - 커스터마이징 방법
+  - ErrorController 구현
+ 
+ 커스텀 에러 페이지
+ - 상태코드 값에 따라 에러 페이지 보여주기
+ - src/main/resources/static|template/error/
+ - 404.html
+ - 5XX.html
+ - ErrorViewResolver 구현
+ 
+ ## Spring HATEOAS
+ Hypermedia As The Engine Of Application State
+ - 서버: 현재 리소스와 연관된 링크정보를 클라이언트에게 제공한다.
+ - 클라이언트: 연관된 링크정보를 바탕으로 리소스에 접근한다.
+ - 연관된 링크정보
+  - Relation
+  - Hypertext Reference
+ - spring-boot-stater-hateoas 의존성추가
+ - [Understanding HATEOAS](https://spring.io/understanding/HATEOAS)
+ - [rest-hateoas guides](https://spring.io/guides/gs/rest-hateoas/)
+ - [HATEOAS - Reference](https://docs.spring.io/spring-hateoas/docs/current/reference/html/)
+ 
+ ObjectMapper 제공
+ - spring.jackson.*
+ - Jackson2ObjectMapperBuilder
+ 
+ LinkDiscovers 제공
+ - 클라이언트 쪽에서 링크 정보를 Rel 이름으로 찾을때 사용 할 수있는 XPath 확장클래스
+ 
+ ## CORS
+ - Single-Origin Policy
+ - Cross-Origin Resource Sharing
+ - Origin? 하나의 오리진
+  - url 스키마(http, https)
+  - hostname(whiteship.me,localhost)
+  - 포트(8080,18080)
+ 
+ 스프링 MVC @CrossOrigin
+ - [CORS](https://docs.spring.io/spring/docs/5.0.7.RELEASE/spring-framework-reference/web.html#mvc-cors)
+ - @Controller 나 @RequstMapping 에 추가하거나
+ - WebMvcConfigurer 사용해서 글로벌 설정
+ 
+ ~~~java
+ @Configuration
+ public class WebConfig implements WebMvcConfigurer {
+     @Override
+     public void addCorsMappings(CorsRegistry registry) {
+         registry.addMapping("/**")
+                 .allowedOrigins("http://localhost:18080");
+     }
+ }
+ ~~~
 
 ## 참고사이트
   - [HttpMessageConverters](https://docs.spring.io/spring/docs/5.0.7.RELEASE/spring-framework-reference/web.html#mvc-config-message-converters)

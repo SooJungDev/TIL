@@ -24,8 +24,9 @@ H2콘솔 사용하는방법
 - INSERT INTO USER VALUES(1,"soojung")
 
 ## Mysql
-지원하는 DBCP
+지원하는 DBCP (Data Base Connection Pool)
 - [HikariCP 기본](https://github.com/brettwooldridge/HikariCP)
+ - 커넥션 객체 기본적으로 10개
 - [Tomcat CP](https://tomcat.apache.org/tomcat-7.0-doc/jdbc-pool.html)
 - [Commnos DBCP2](https://commons.apache.org/proper/commons-dbcp/)
 
@@ -43,7 +44,7 @@ MySQL 커넥터 의존성 추가
 ~~~
 
 MySQL 추가(도커 사용)
-- docker run -p 3306:3006 -name mysql_boot -e MYSQL_ROOT_PASSWORD=1 -e MYSQL_DATABASE=springboot
+- docker run -p 3306:3006 --name mysql_boot -e MYSQL_ROOT_PASSWORD=1 -e MYSQL_DATABASE=springboot
  -e MYSQL_USER=soojung -e MYSQL_PASSWORD=pass -d mysql
 - docker exec -i t mysql_boot bash
 - mysql -u root -p

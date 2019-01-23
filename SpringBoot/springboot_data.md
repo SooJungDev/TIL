@@ -158,4 +158,38 @@ ORM(Object-Relational Mapping)과 JPA(Java Persistence API)
 
 스프링 데이터 리파지토리 테스트 만들기
 - H2 DB를 테스트 의존성에 추가하기
-- @DataJpaTest(슬사이스 테스트)작성
+- @DataJpaTest(슬라이스 테스트)작성
+
+인텔리제이에서 테스트 작성할때 해당 클래스위에 command+shift+t 누르면 자동으로 셍상됨
+
+## 데이터베이스 초기화
+JPA를 사용한 데이터베이스 초기화
+- spring.jpa.hibernate.ddl-auto=update
+- spring.jpa.generate-ddl=true 설정해줘야 동작함
+- spring.jpa.show-sql=true
+
+운영일 경우
+spring.jpa.hibernate.ddl-auto=validate => 검증만 해줌
+spring.jpa.generate-ddl=false
+
+SQL 스크립트를 사용한 데이터베이스 초기화
+- schema.sql 또는 schema-${platform}.sql (순서 제일 처음)
+- data.sql 또는 data-${platform}.sql (그다음)
+- ${platform} 값은 spiring.datasource.platform으로 설정가능
+
+## 데이터베이스 마이그레이션
+Flyway와 Liquibase가 대표적인데 Flyway 사용
+[Flyway reference](https://docs.spring.io/spring-boot/docs/2.0.3.RELEASE/reference/htmlsingle/#howto-execute-flyway-database-migrations-on-startup)
+의존성 추가
+- org.flywaydb:flyway-core
+
+마이그레이션 디렉토리
+- db/migration 또는 db/migration/{vendor}
+- spring.flyway.locations로 변경 가능
+
+마이그레이션 파일 이름
+- V숫자_이름.sql
+- V는 꼭 대문자로.
+- 숫자는 순차적으로 (타임스탬프 권장)
+- 숫자와 이름사이에 언더바 두개
+- 이름은 가능한 서술적으로 

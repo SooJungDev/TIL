@@ -44,15 +44,17 @@ MySQL 커넥터 의존성 추가
 ~~~
 
 MySQL 추가(도커 사용)
-- docker run -p 3306:3006 --name mysql_boot -e MYSQL_ROOT_PASSWORD=1 -e MYSQL_DATABASE=springboot
- -e MYSQL_USER=soojung -e MYSQL_PASSWORD=pass -d mysql
+- docker run -p 3306:3006 --name mysql_boot -e MYSQL_ROOT_PASSWORD=1 -e MYSQL_DATABASE=springboot -e MYSQL_USER=soojung -e MYSQL_PASSWORD=pass -d mysql
 - docker exec -i t mysql_boot bash
-- mysql -u root -p
+- mysql -u soojung -p
+- docker inspect mysql_boot | grep IP 
+  => localhost 로 안되서 해당 mysql 에 ip 주소로 했더니 잘됨 ㅠㅠ
 
 MySQL 용 Datasource 설정
 - spring.datasource.url=jdbc:mysql://localhost:3306:/springboot?useSSL=false
 - spring.datasource.username = soojung
 - spring.datasource.password = pass
+
 
 MYSQL 접속시 에러
  강좌로 돌아가기 백기선의 프로필 사진강사 
@@ -74,7 +76,7 @@ MySQL 커넥터 의존성 추가
    <artifactId>mysql-connector-java</artifactId>
 </dependency>
 MySQL 추가 (도커 사용)
-docker run -p 3306:3306 –name mysql_boot -e MYSQL_ROOT_PASSWORD=1 -e MYSQL_DATABASE=springboot -e MYSQL_USER=keesun -e MYSQL_PASSWORD=pass -d mysql
+docker run -p 3306:3306 --name mysql_boot -e MYSQL_ROOT_PASSWORD=1 -e MYSQL_DATABASE=springboot -e MYSQL_USER=soojung -e MYSQL_PASSWORD=pass -d mysql
 docker exec -i -t mysql_boot bash
 mysql -u root -p
 
@@ -104,5 +106,56 @@ MySQL 라이센스 (GPL) 주의
 - MySQL 대신 MariaDB 사용검토
 - 소스코드 공개 의무 여부 확인
 
+## PostgreSQL
+의존성 추가
+~~~
+<dependency>
+   <groupId>org.postgresql</groupId>
+   <artifactId>postgresql</artifactId>
+</dependency>
+PostgreSQL 설
+~~~
 
+PostgreSQL 설치 및 서버 실행(docker)
+~~~
+docker run -p 5432:5432 -e POSTGRES_PASSWORD=pass -e POSTGRES_USER=keesun -e POSTGRES_DB=springboot --name postgres_boot -d postgres
 
+docker exec -i -t postgres_boot bash
+
+su - postgres
+
+psql -U keesun springboot
+
+데이터베이스 조회
+\list
+
+테이블 조회
+\dt
+
+쿼리
+SELECT * FROM account;
+~~~
+
+PostgreSQL 경고 메세지
+경고: org.postgresql.jdbc.PgConnection.createClob() is not yet implemented
+해결: spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+
+## 스프링 데이터 jpa
+ORM(Object-Relational Mapping)과 JPA(Java Persistence API)
+- 객체와 릴레이션을 맵핑할때 발생하는 개념적 불일치를 해결하는 프레임워크
+- JPA: ORM을 위한 자바 표준
+스프링 데이터 JPA 의존성추가
+~~~
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+~~~
+스프링 데이터 JPA 사용하기
+- @Entity 클래스 만들기
+- Repository 만들기
+- Spring Data JPA -> JPA-> Hibernate -> Datasource
+
+스프링 데이터 리파지토리 테스트 만들기
+- H2 DB를 테스트 의존성에 추가하기
+- @DataJpaTest(슬사이스 테스트)작성

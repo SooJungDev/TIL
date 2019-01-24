@@ -193,3 +193,59 @@ Flyway와 Liquibase가 대표적인데 Flyway 사용
 - 숫자는 순차적으로 (타임스탬프 권장)
 - 숫자와 이름사이에 언더바 두개
 - 이름은 가능한 서술적으로 
+
+## Redis
+캐시 , 메시지브로커, 키/밸류 스토어 등으로 사용가능.
+
+- 의존성 추가
+ - spring-boot-starter-data-redis
+ 
+- Redis 설치 및 실행(도커)
+ - docker run -p 6379:6379 --name redis_boot -d redis
+ - docker exec -i -t redis_boot redis-cli
+ 
+- 스프링 데이터 Redis
+ - [Spring Data Redis](http://spring.io/projects/spring-data-redis)
+ - StringRedisTemplate 또는 RedisTemplate
+ - extends CrudRepository
+ 
+- [Redis 주요 커맨드](https://redis.io/commands)
+ - keys *
+ - get {key}
+ - hgetall {key}
+ - hget {key}{column}
+
+- 커스터마이징
+ - spring.redis.*
+
+## MongoDB
+- [MongoDB](https://www.mongodb.com/)는 JSON 기반의 도큐먼트 데이터 베이스 (스키마가 없는게 특징)
+
+- 의존성 추가
+ - docker run -p 27017:27017 -- name mongo_boot -d mongo
+ - docker exec -i -t mongo_boot bash
+ - mongo
+- 스프링 데이터 몽고 DB
+ - MongoTemplate
+ - MongoRepository
+ - 내장용 MongoDB (테스트용)
+  - de.flapdoodle.embed:de.flapdoodle.embed.mongo
+ - @DataMongoTest
+
+## Neo4j
+- [Neo4j](https://neo4j.com/)는 노드간의 연관관계를 영속화하는데 유리한 그래프 데이터베이스임
+
+- 의존성추가
+ - spring-boot-starter-data-neo4j
+ 
+- Neo4j 설치 및 실행(도커)
+ - docker run -p 7474:7474 -p 7687:7687 -d --name neo4j_boot neo4j
+ - http://localhost:7474/browser
+ 
+- 스프링 데이터 Neo4J
+ - Neo4jTemplate (Deprecated)
+ - SessionFactory
+ - Neo4jRepository
+
+## 정리
+- [springboot sql reference](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-sql)

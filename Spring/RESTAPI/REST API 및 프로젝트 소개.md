@@ -68,3 +68,17 @@ HATEOAS 해결 방법
 - 자동 설정(@EnableAutoConfiguration)
 - 내장 웹서버(의존성과 자동설정의 일부)
 - 독립적으로 실행가능한 JAR(pom.xml의 플러그인)
+
+## Event 도메인 구현
+- intellij 단축키 command+shift+T 테스트를 만들어줌
+- 리펙토링 중복 제거 단축키 option+command+v 치면됨
+
+롬복 어노테이션
+- 왜 @EqualsAndHasCode에서 of 를 사용하는가?
+  - 연관 관계가 있을 경우 stackoverflow 에러를 발생할 수있음 그래서 주로 id에 of를 걸어줌
+  - 절대로 연관관계에 해당되는 다른 entity와 엮지 않는 경우가 좋다.
+- 왜 @Builder를 사용할때 @AllArgsConstructor 가 필요한가?
+- @Data를 쓰지 않는 이유?
+ - EqualsAndHasCode를 구현해주는데 상호 참조떄문 문제가 생길 수있음
+- 어노테이션을 줄일 수 없나?
+ - meta 애노테이션으로 동작하지 않기 떄문에 줄일수 없다!

@@ -46,7 +46,9 @@ REST Docs 코딩
     - responseHeaders() + headerWithName()
     - responseFields() + fieldWithPath()
  
-- Relaxed*
+- Relaxed 접두어
+    - 장점: 문서 일부분만 테스트 할수 있다.
+    - 단점: 정확한 문서를 생성하지 못한다.
 - Processor
     - preprocessRequest(prettyPrint())
     - preprocessResponse(prettyPrint())
@@ -100,6 +102,59 @@ Relaxed 접두어
 ## 스프링 Rest Docs: 문서 빌드
 - [스프링 REST Docs](https://docs.spring.io/spring-restdocs/docs/current/reference/html5/)
 - pom.xml에 메이븐 플러그인 설정
+~~~
+
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <id>generate-docs</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>html</backend>
+                            <doctype>book</doctype>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework.restdocs</groupId>
+                        <artifactId>spring-restdocs-asciidoctor</artifactId>
+                        <version>2.0.2.RELEASE</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.outputDirectory}/static/docs
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${project.build.directory}/generated-docs
+                                    </directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+~~~
 
 - 템플릿 파일 추가
     - src/main/asciidoc/index.adoc

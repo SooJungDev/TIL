@@ -193,13 +193,14 @@ Relaxed 접두어
 
 2. 도커로 PostgreSQL 컨테이너 실행
 ~~~
-docker run --name ndb -p 5432:5432 -e POSTGRES_PASSWORD=pass -d postgres
+docker run --name rest -p 5432:5432 -e POSTGRES_PASSWORD=pass -d postgres
 ~~~
 
 3. 도커 컨테이너에 들어가보기
 ~~~
-docker exec -i -t ndb bash su-
-postgres psql -d postgres -U
+docker exec -i -t rest bash
+su - postgres
+psql -d postgres -U postgres
 ~~~
 
 Query Database
@@ -244,9 +245,9 @@ logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
 
 
 애플리케이션 설정과 테스트 설정 중복을 어떻게 줄일 것인가?
-- 프로파일과 @ActiveProfile 활용
+- 프로파일과 @ActiveProfile("test") 활용
 
-application.properteis
+application-test.properteis
 ~~~
 spring.datasource.username=sa
 spring.datasource.password=
@@ -270,6 +271,7 @@ public ResourceSupport root(){
 
 테스트 컨트롤러 리팩토링
 - 중복 코드 제거
+- 인텔리제이 단축키 alt+command+M 메소드로 빼줌
 
 에러 리소스
 - 인덱스로 가는 링크 제공

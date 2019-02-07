@@ -12,12 +12,15 @@
 - 링크
     - HREF
     - REF
-        - self
-        - profile
+        - self (자기 자신에 대한것)
+        - profile (문서에 대한 링크를 걸을때)
         - update-event
         - query-events
  
 ## 스프링 HATEOAS 적용
+인텔리제이 단축키 
+- 변수로 빼주는 기능: option+command+v
+
 EventResource 만들기
 - extends ResourceSupport의 문제
     - @JsonUnwrapped 로 해결
@@ -198,7 +201,7 @@ docker run --name rest -p 5432:5432 -e POSTGRES_PASSWORD=pass -d postgres
 
 3. 도커 컨테이너에 들어가보기
 ~~~
-docker exec -i -t rest bash
+docker exec -i -t rest bash  
 su - postgres
 psql -d postgres -U postgres
 ~~~

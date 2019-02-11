@@ -192,13 +192,14 @@ JpaRepository<Entity, Id> 인터페이스
 - 핵심은 ImportBeanDefinitionRegistrar 인터페이스
 
 ## 핵심개념 개념정리
-데이터베이스와 자바 
-패러다임 불일치
-ORM이란?
-JPA 사용법(엔티티,벨류타입,관계맵핑)
-JPA 특징(엔티티 상태변화,Cascade,Fetch,1차 캐시,...)
-주의할점
-    - 반드시 발생하는 SQL을 확인할것
-    - 팁: "?"에 들어있는 값 출력하기
-        - logging.level.org.hibernate.SQL=debug
-        - logging.level.org.hibernate.type.descriptor.sql=trace
+데이터베이스와 자바   
+패러다임 불일치  
+ORM이란?  
+JPA 사용법(엔티티,벨류타입,관계맵핑)  
+JPA 특징(엔티티 상태변화,Cascade,Fetch,1차 캐시,...)    
+
+주의할점  
+- 반드시 발생하는 SQL을 확인할것  
+- 팁: "?"에 들어있는 값 출력하기  
+    - logging.level.org.hibernate.SQL=debug 
+    - logging.level.org.hibernate.type.descriptor.sql=trace  

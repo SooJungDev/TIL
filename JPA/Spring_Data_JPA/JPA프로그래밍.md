@@ -32,6 +32,8 @@ application.properties
 - 엔티티는 객체 세상에서 부르는 이름
 - 보통 클래스와 같은 이름을 사용하기때문에 값을 변경하지 않음
 - 언티티의 이름은 JQL에서 쓰임
+- User 클래스 이름 어떤 디비에서는 키워드, 이름을 변경해줘야함
+    - @Entity(name="users")
 
 @Table
 - 릴레이션 세상에서 부르는 이름
@@ -43,6 +45,8 @@ application.properties
 - 자바의 모든 primitive 타입과 그 랩퍼 타입을 사용 할 수 있음
     - Date랑 BigDecimal, BigInteger도 사용가능
 - 복합키를 만드는 매핑하는 방법도 있지만 그건 논외로
+- 주로 long(primitive) 대신에 Long(wrapper) 을 씀
+    - Long 새로만든 것 구별해줌 null 이니
 
 @GeneratedValue
 - 주키의 생성방법을 맵핑하는 애노테이션
@@ -66,6 +70,11 @@ application.properties
 application.properties
 - spring.jpa.show-sql=true
 - spring.jpa.properties.hibernate.format_sql=true
+
+앤티티 맵핑 변경후 적용되지 않는 경우
+- spring.jpa.hibernate.ddl-auto=update 일때 전에 만들어진 컬럼일 경우 적용안될수있음
+- spring.jpa.hibernate.ddl-auto=create 개발시 귀찮긴 해도 create가 깔끔함
+
 
 ## value 타입 맵핑
 엔티티 타입과 Value 타입 구분
@@ -130,14 +139,52 @@ private Address address;
 - @OneToMany(mappedBy)
 - 주인한테 관계를 설정해야 DB에 반영됨
 
+~~~java
+   account.getStudies().add(study); // 주석처리해도 됨 옵셔널
+   study.setOwner(account); // 이건 항상!!!!
+~~~
+
+보통은 묶어서 세트로 다님 Account.java
+~~~java
+    public void addStudy(Study study) {
+        this.getStudies().add(study);
+        study.setOwner(this);
+    }
+    
+      public void removeStudy(Study study) {
+        this.getStudies().remove(study);
+        study.setOwner(null);
+    }
+~~~
+
 ## Cascade
-- 엔티티의 상태 변화를 전파시키는 옵션
+- 엔티티의 상태 변화를 전파(전이)시키는 옵션
 
 **엔티티의 상태**가 뭐지?
 - Transient: JPA가 모르는 상태
 - Persistent: JPA가 관리중인 상태(1차 캐시,Dirty Checking, Write Behind,...)
+ - Dirty Checking : 객체를 계속 추적하는 상태
+ - Write Behind: 객체의 상태 변화를 늦게 반영함
 - Detached: JPA가 더이상 관리하지 않는 상태
 - Removed: JPA가 관리하긴 하지만 삭제하기로 한 상태
+
+~~~java
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    private Set<Comment> comments = new HashSet<>();
+~~~
+
+-   여러개 줄수있음
+~~~java
+    @OneToMany(mappedBy = "post", cascade ={ CascadeType.PERSIST,CascadeType.REMOVE})
+    private Set<Comment> comments = new HashSet<>();
+~~~
+
+- 보통은 다 걸어줌 CascadeType.All
+~~~java
+    // 여러개 줄수있음
+    @OneToMany(mappedBy = "post", cascade = CascadeType.All)
+    private Set<Comment> comments = new HashSet<>();
+~~~
 
 ## Fetch
 연관 관계의 엔티티를 어떻게 가져올것이냐?

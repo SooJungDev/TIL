@@ -150,6 +150,9 @@ Stream <User> readAllByFirstnameNotNull();
     - 메인 쓰레드 대신 백그라운드 쓰레드가 일하는 정도의 차이
     - 단 백그라운드로 실행하고 결과를 받을 필요가 없는 작업이라면 @Async를 사용해서 응답속도를 향상 시킬 수는 있음
 
+ListenableFuture
+- Nonblocking, async
+
 ## 커스텀 리포지토리
 
 쿼리메소드(쿼리새성과 쿼리 찾아쓰기)로 해결이 되지 않는 경우 직접 코딩으로 구현가능.  
@@ -160,9 +163,55 @@ Stream <User> readAllByFirstnameNotNull();
     - 인터페이스 구현 클래스 만들기(기본 접미어는 Impl)
     - 엔티티 리포지토리에 커스텀 리포지토리 인터페이스 추가
 
-기능추가하기  
+기능추가하기 
+~~~java
+public interface PostCustomRepository<T> {
+    List<Post> findMypost();
+
+    void delete(T entity);
+}
+
+~~~ 
+
+~~~ java
+package me.crystal.demojpa3.post;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import java.util.List;
+
+@Repository
+@Transactional
+public class PostCustomRepositoryImpl implements PostCustomRepository<Post> {
+
+    @Autowired
+    EntityManager entityManager;
+    @Override
+    public List<Post> findMypost() {
+        System.out.println("custom findMypost");
+        return entityManager.createQuery("select p from Post As p",Post.class)
+                .getResultList();
+    }
+
+    @Override
+    public void delete(Post entity) {
+        System.out.println("custom delete");
+        entityManager.remove(entity);
+    }
+}
+~~~
 기본기능 덮어쓰기  
+
+
 접미어 설정하기     
+~~~java
+@SpringBootApplication
+@EnableJpaRepositories(repositoryImplementationPostfix = "default")
+public class Application {
+~~~
     
 ## 기본 리포지토리 커스터마징
 모든 리포지토리에 공통적으로 추가 하고싶은 기능이 잇거나 덮어쓰고 싶은 기본 기능이 있다면  

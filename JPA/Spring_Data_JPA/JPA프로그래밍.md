@@ -197,6 +197,7 @@ JPQL(HQL)
 - Java Persistence Query Language / Hibernate Query Language
 - 데이터베이스 테이블이 아닌 엔티티 객체 모델 기반으로 쿼리 작성.
 - JPA 또는 하이버네이트가 해당 쿼리를 SQL로 변환해서 실행함
+- 타입 세이프 하지않음
 - [HQL and JPQL](https://docs.jboss.org/hibernate/orm/5.2/userguide/html_single/Hibernate_User_Guide.html#hql)
 
 ~~~ java
@@ -236,7 +237,34 @@ JpaRepository<Entity, Id> 인터페이스
 
 매직은 어덯게 이뤄지나?
 - 시작은 @Import(JpaRepositoriesRegistrar.class)
-- 핵심은 ImportBeanDefinitionRegistrar 인터페이스
+- 핵심은 ImportBeanDefinitionRegistrar 인터페이스 
+    - 스프링 프레임워크에 일부
+    - 빈을 프로그래밍을 통해서 등록해줌 
+
+~~~java
+public class SoojungRegistrar implements ImportBeanDefinitionRegistrar {
+    @Override
+    public void registerBeanDefinitions(AnnotationMetadata annotationMetadata, BeanDefinitionRegistry beanDefinitionRegistry) {
+        GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
+        beanDefinition.setBeanClass(Soojung.class);
+        beanDefinition.getPropertyValues().add("name", "crystal");
+
+        beanDefinitionRegistry.registerBeanDefinition("soojung", beanDefinition);
+    }
+}
+~~~    
+
+~~~java
+@SpringBootApplication
+@Import(SoojungRegistrar.class)
+public class DemospringdataApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(DemospringdataApplication.class, args);
+    }
+
+}
+~~~   
 
 ## 핵심개념 개념정리
 데이터베이스와 자바   

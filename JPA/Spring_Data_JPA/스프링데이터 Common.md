@@ -262,7 +262,7 @@ public interface PostRepository extends MyRepository<Post, Long>{
 
 
 ## 도메인 이벤트
-도메인 고나련 이벤트를 발생시키기
+도메인 관련 이벤트를 발생시키기
 
 스프링 프레임워크의 이벤트 관련기능
 - [Standard and Custom Events](https://docs.spring.io/spring/docs/current/spring-framework-reference/core.html#context-functionality-events)
@@ -270,12 +270,53 @@ public interface PostRepository extends MyRepository<Post, Long>{
 - 이벤트: extends ApplicationEvent
 - 리스너
     - implements ApplicationListener<E extends ApplicationEvent>
+    
+    ~~~ java
+       public class PostListener implements ApplicationListener<PostPublishedEvent> {
+       
+           @Override
+           public void onApplicationEvent(PostPublishedEvent event) {
+               System.out.println("----------------------");
+               System.out.println(event.getPost().getTitle()+" is published!!!!!!");
+               System.out.println("----------------------");
+           }
+       } 
+    ~~~
+    
     - @EventListener
+    ~~~ java
+     public class PostListener{
+            
+                @EventListener
+                public void onApplicationEvent(PostPublishedEvent event) {
+                    System.out.println("----------------------");
+                    System.out.println(event.getPost().getTitle()+" is published!!!!!!");
+                    System.out.println("----------------------");
+                }
+       } 
+    ~~~
     
 스프링 데이터의 도메인 이벤트 Publisher
 - @DomainEvents
 - @AfterDomainEventPublication
 - extends AbstractAggregationRoot<E>
+
+   ~~~ java
+   @Entity
+   public class Post extends AbstractAggregateRoot<Post> {
+       @Id
+       @GeneratedValue
+       private Long id;
+   
+      ......
+   
+       public Post publish() {
+           this.registerEvent(new PostPublishedEvent(this));
+           return this;
+       }
+   }
+   ~~~
+   
 - 현재는 save() 할때만 발생합니다.
 
 ## QueryDSL
@@ -367,6 +408,7 @@ class WebConfiguration {}
 스프링 Converter
 - [Converter](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/convert/converter/Converter.html)
 - Formatter도 들어본것같은데?...
+    - 문자열 기반. 어떤 문자열을 어떤 타입으로 바꿀것이냐 
 
 ~~~java
     @GetMapping("/post/{id}")

@@ -30,6 +30,46 @@ Transient 인지 Detached 인지 어떻게 판단하는가?
   EntityManager.merge()
   - [merge](https://docs.oracle.com/javaee/6/api/javax/persistence/EntityManager.html#merge(java.lang.Object)
   - Merge() 메소드에 넘긴 그 엔티티의 복사본을 만들고, 그 복사본을 다시 Persistent 상태로 변경하고 그 복사본을 반환
+
+~~~java
+@RunWith(SpringRunner.class)
+@DataJpaTest
+public class PostRepositoryTest {
+
+    @Autowired
+    PostRepository postRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Test
+    public void save() {
+        Post post = new Post();
+        post.setTitle("jpa");
+        Post savedPost = postRepository.save(post); //persist
+
+        assertThat(entityManager.contains(post)).isTrue();
+        assertThat(entityManager.contains(savedPost)).isTrue();
+        assertThat(savedPost == post); 
+
+        Post postUpdate = new Post();
+        postUpdate.setId(post.getId());
+        postUpdate.setTitle("hibernate");
+        Post updatedPost = postRepository.save(postUpdate);// merge
+
+        assertThat(entityManager.contains(updatedPost)).isTrue();
+        assertThat(entityManager.contains(postUpdate)).isFalse();
+        assertThat(updatedPost == postUpdate);
+
+
+        List<Post> all = postRepository.findAll();
+        assertThat(all.size()).isEqualTo(1);
+    }
+
+}
+~~~  
+  
+- **jpa** 저장 사용 시 반환된 객체를 사용하는것이 좋음!!! persist()로 반환했는지, Merge()로 반환했는지에 따라 달라지기 때  
   
 ## 쿼리메소드
 - [Query Creation](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods.query-creation)

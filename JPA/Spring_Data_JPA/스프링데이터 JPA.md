@@ -141,6 +141,20 @@ Update 또는 Delete 쿼리 직접 정의하기
 int upadateTitle(Long id, String title);
 ~~~
 
+~~~ java
+public void updateTitle() {
+    Post spring = savePost();
+
+    String hibernate = "hibernate";
+    int update = postRepository.updateTitle(hibernate, spring.getId());
+    assertThat(update).isEqualTo(1);
+
+    Optional<Post> byId = postRepository.findById(spring.getId());
+    assertThat(byId.get().getTitle()).isEqualTo(hibernate);
+}
+~~~
+- clearAutomatically 해줘야함!!! 안그러면 전에있던 객체를 들고있기때문에 변경사항이 적용되지않음
+- 업데이트 할 경우에는 해당 객체를 다시 셋해주는게 나음 권장하지않는다! 
 
 ## EntityGraph
 쿼리 메소드 마다 연관관계의 Fetch모드를 설정 할 수 있음

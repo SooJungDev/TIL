@@ -165,6 +165,12 @@ public void updateTitle() {
 - (기본값) FETCH: 설정한 엔티티 애트리뷰트는 EAGER 패치 나머지는 LAZY 패치
 - LOAD: 설정한 엔티티 애트리뷰트는 EAGER 패치 나머지는 기본 패치 전략따름
 
+- 아래와 같은 코드가 제일 깔끔함
+~~~java
+    @EntityGraph(attributePaths = "post")
+    Optional<Comment> getById(Long id);
+~~~
+
 
 ## Projection
 엔티티의 일부 데이터만 가져오기
@@ -249,6 +255,24 @@ JpaSpecificationExecutor<Comment>{
 }
 ~~~
 
+~~~java
+public class CommentSpecs {
+
+    public static Specification<Comment> isBest() {
+        return (Specification<Comment>)
+                (root, query, builder) ->
+                        builder.isTrue(root.get(Comment_.best));
+
+    }
+
+    public static Specification<Comment> isGood() {
+        return (Specification<Comment>)
+                (root, query, builder) ->
+                        builder.greaterThanOrEqualTo(root.get(Comment_.up), 10);
+    }
+}
+~~~
+
 ## Query by Example
 QBE는 필드 이름을 작성할 필요 없이 단순한 인터페이스를 통해 동적으로 쿼리를 만드는 기능을 제공하는 사용자 친화적인 쿼리 기술
 
@@ -278,7 +302,9 @@ QueryByExampleExecutor
 - [Transaction 반드시 읽어볼것 그래야 설정해서 쓸수있는지 알수있음](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html)
 
 JPA 구현체로 Hibernate를 사용할때 readOnly를 사용하면 좋은점
-- Flush 모드를 NEVER 로 설정하여, Dirty checking을 하지 않도록 한다.
+- Flush 모드(데이터베이스 싱크(변경)할건지 정하는 모드)를 NEVER 로 설정하여, Dirty checking을 하지 않도록 한다.
+- 변경이 되지 않을테니까 변경을 감지해야할 이유가 없음 
+- 성능에 도움이됨 
 
 ## Auditing
 스프링 데이터 JPA의 Auditing
@@ -314,3 +340,4 @@ JPA의 라이프 사이클 이벤트
 
 
 ## 마무리
+- JPA 상태 변환 꼭 알아야함(다시 공부하기!!!!)

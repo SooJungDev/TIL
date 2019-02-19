@@ -61,6 +61,14 @@ application.properties
 - columnDefinition
 - ...
 
+@Enumerated
+- EnumType.STRING 으로 사용하는 것이 좋다
+- 기본값 @Enumerated(value = EnumType.ORDINAL) 좋지않음
+    - 순서로 맵핑해주기 때문에 값이 변경될때 문제가됨 
+
+@Enumerated(value = EnumType.STRING)
+private CommentStatus commentStatus;
+
 @Temporal
 - 현재 JPA 2.1까지는 Date, Calendar만 지원
 

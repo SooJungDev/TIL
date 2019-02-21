@@ -204,7 +204,7 @@ ApplicationContext extends [EnvironmentCapable](https://docs.spring.io/spring-fr
 프로파일 정의하기
 - 클래스에 정의
     - @Configuration @Profile("test")
-    - @Component @Profile("test)
+    - @Component @Profile("test")
 - 메소드에 정의
     - @Bean @Profile("test")
 
@@ -216,11 +216,14 @@ ApplicationContext extends [EnvironmentCapable](https://docs.spring.io/spring-fr
 - ! (not)
 - & (and)
 - | (or)
+  - ex) @Profile("!prod & test") 
+    - 표현식 간단하게 해주는것이 좋음
     
 ## Environment 2부 프로퍼티
 프로퍼티
 - 다양한 방법으로 정의 할 수 있는 설정값
 - Environment의 역할은 프로퍼티 소스 설정 및 프로퍼티 값 가져오기
+    - Enviroment.getProperty("app.name);
 
 프로퍼티에는 우선순위가 있다.
 - StandardServletEnvironment의 우선순위
@@ -233,24 +236,28 @@ ApplicationContext extends [EnvironmentCapable](https://docs.spring.io/spring-fr
 - Environment를 통해 프로퍼티 추가하는 방법
 
 스프링 부트의 외부 설정 참고
+~~~java
+ @Value("${app.name}")
+ String appName;
+~~~
 - 기본 프로퍼티 소스 지원(application.properties)
 - 프로파일까지 고려한 계층형 프로퍼티 우선 순위 제공
 
 ## MessageSource
 국제화(i18n) 기능을 제공하는 인터페이스
 
-ApplicationContext extends MessaageSource
+ApplicationContext extends MessageSource
 - getMessage(String code, Object[] args, String, default,Locale, Ioc)
 - ...
 
 스프링 부트를 사용한다면 별다른 설정 필요없이 messages.properties 사용할 수 있음
 - messages.properties
-- message_ko_kr.properties
+- messages_ko_KR.properties (_바로 이어져야함)
 - ...
 
 릴로딩 기능이 있는 메세지 소스 사용하기
 ~~~java
-@Bean
+@Bean 
 public MessageSource messageSource(){
   var messageSource = new ReloadableResourceBundleMessageSource();
   messageSource.setBasename("classpath:/messages");
@@ -261,7 +268,8 @@ public MessageSource messageSource(){
 ~~~
 
 ## ApplicationEventPublisher
-- 이벤트 프로그래밍에 필요한 인터페이스 제공. [옵져버 패턴](https://en.wikipedia.org/wiki/Observer_pattern) 구현체
+- 이벤트 프로그래밍에 필요한 인터페이스 제공.
+- [옵져버 패턴](https://en.wikipedia.org/wiki/Observer_pattern) 구현체
 
 ApplicationContext extends [ApplicationEventPublisher](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ApplicationEventPublisher.html)
 - publishEvent(ApplicationEvent event)
@@ -279,12 +287,39 @@ ApplicationContext extends [ApplicationEventPublisher](https://docs.spring.io/sp
 - 기본적으로 synchronized
 - 순서를 정하고 싶다면 @Order 와 함께 사용
 - 비동기적으로 실행하고 싶다면 @Async와 함께 사용
+    - 비동기이기때문에 순서는 보장되지 않는다 @Order 는 의미없음..
+    - @Async 라고 붙인다고해서 async가 되지 않음
+      - @EnableAsync 붙여야함 그래야 작동!
+
+~~~java
+@Component
+public class MyEventHandler {
+
+    @EventListener
+    @Order(Ordered.HIGHEST_PRECEDENCE + 2)
+    public void onApplicationEvent(MyEvent event){
+        System.out.println("이벤트 받았다. 데이터는"+event.getData());
+   }
+}
+~~~
+
+~~~ java
+@Component
+public calss AnotherHandler {
+
+    @EventListener
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public void onApplicationEvent(MyEvent event){
+        System.out.println("Another"+event.getData());
+   }
+}
+~~~
 
 스프링이 제공하는 기본이벤트
-- ContextRefreshedEvent: ApplicationContext를 초기화 했거나 리프레시 했을때 발생
-- ContextStartedEvent: ApplicationContext를 start() 하여 라이프사이클 빈들이 시작 신호를 받은 시점에 발생
-- ContextStoppedEvent: ApplicationContext를 stop()하여 라이프사이클 빈들이 정지 신호를 받은 시점에 발생
-- ContextClosedEvent: ApplicationContext를 close()하여 싱글톤 빈 소멸되는 시점에 발생
+- ContextRefreshedEvent: ApplicationContext 를 초기화 했거나 리프레시 했을때 발생
+- ContextStartedEvent: ApplicationContext 를 start() 하여 라이프사이클 빈들이 시작 신호를 받은 시점에 발생
+- ContextStoppedEvent: ApplicationContext 를 stop()하여 라이프사이클 빈들이 정지 신호를 받은 시점에 발생
+- ContextClosedEvent: ApplicationContext 를 close()하여 싱글톤 빈 소멸되는 시점에 발생
 - RequestHandledEvent: HTTP 요청을 처리 했을때 발생.
 
 ## ResourceLoader
@@ -299,6 +334,24 @@ ApplicationContext extends ResourceLoader
 - 상대/절대 경로로 읽어오기
 
 Resource getResource(java.lang.String location)
+
+~~~ java
+@Component
+public class AppRunner implements ApplicationRunner{
+
+    @Autowired
+    ResourceLoader resourceLoader;
+    
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        Resource resource = resourceLoader.getResource("classpath:test.txt");
+        System.out.println(resource.exists());
+        System.out.println(resource.getDescription());
+        System.out.println(Files.readString(Path.of(resource.getURI())));
+    }
+
+}
+~~~
 
 
 

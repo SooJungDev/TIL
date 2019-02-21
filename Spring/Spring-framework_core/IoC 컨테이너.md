@@ -71,8 +71,15 @@ ApplicationContext
 
 같은 타입의 빈이 여러개 일때
 - @Primary
+    - 주로 사용하는 빈에 붙여줌 우선으로 주입됨
+    - 추천 타입세이프하므로
 - 해당 타입의 빈 모두 주입받기
+    ~~~ java
+     @Autowired
+     List<BookRepository> bookRepositories;
+    ~~~ 
 - @Qualifier (빈 이름으로 주입)
+    - @Qualifier("soojungBookRepository") 비추천
 
 동작 원리
 - 첫시간에 잠깐 언급했던 빈 라이프 사이클 기억?!?!

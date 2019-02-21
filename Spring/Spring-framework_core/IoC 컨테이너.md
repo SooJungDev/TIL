@@ -84,9 +84,12 @@ ApplicationContext
 ## @Component와 컴포넌트 스캔
 컴포넌트 스캔 주요기능
 - 스캔 위치 설정
+    - basePackages 밑에 있는 애들만 스캔함 그밖에 있으면 스캔하지 않아서 빈이 주입되지 않음 
 - 필터: 어떤 애노테이션을 스캔 할지 또는 하지않을지 
+    
 
-@Component
+컴포넌트 스캔하는 대상들  
+@Component  
 - @Repository
 - @Service
 - @Controller
@@ -96,7 +99,11 @@ ApplicationContext
 - @ComponentScan은 스캔할 패키지와 애노테이션에 대한 정보
 - 실제 스캐닝은 [ConfigurationClassPostProcessor](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/annotation/ConfigurationClassPostProcessor.html)라는 [BeanFactoryPostProcessor](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/beans/factory/config/BeanFactoryPostProcessor.html)에 의해 처리됨
 
+- @Bean 애노테이션을 사용해서 빈등록
+
 - function을 사용한 빈 등록
+    - 애플리케이션 구동시 성능상에 조금 이점이 있을 수 있음 
+    - 비추천 불편함.. 설정파일들이 많아 질 수있음 
 ~~~ java
 
 public static void main(String[] args){
@@ -112,7 +119,8 @@ public static void main(String[] args){
 
 ## 빈의 스코프
 스코프
-- 싱글톤
+- 싱글톤 (아무런 설정을 하지않으면 기본이 싱글톤)
+    - 해당 빈의 인스턴스가 오직 한개 뿐이라는말
 - 프로토 타입
     - Request
     - Session
@@ -128,11 +136,55 @@ public static void main(String[] args){
     - scoped-proxy
     - Object-Provider
     - Provider(표준)
+
+- 프로토 타입
+    - 빈을 받아 올때마다 매번 다른 새로운 인스턴스를 생성함    
+~~~java
+@Component
+@Scope("prototype")
+public class Proto{
+
+    @Autowired
+    Single single;  // 별문제 없음
+
+}
+~~~   
+
+
+~~~java
+@Component
+public class Single{
     
+    @Autowired
+    private Proto proto;
+    
+    public Proto getProto(){
+        return proto;
+    }
+
+}
+~~~ 
+- 싱글톤 객체 안에 prototype 인게 변경되지 않음
+
+
+변경이 바뀌게 해주려면 해당 클래스에  proxyMode =ScopedProxyMode.TARGET_CLASS 추가
+- INTERFACES 도 사용가능
+~~~java
+@Component
+@Scope("prototype", proxyMode =ScopedProxyMode.TARGET_CLASS)
+public class Proto{
+
+}
+~~~   
+
+   
 [프록시](https://en.wikipedia.org/wiki/Proxy_pattern)
+- 프록시로 감싸줘라!!!!
+- 직접 참조하지 않고 프록시를 거쳐서 참조해줘라 
+- 매번 바꿔 줄 수있는 프록시로 감싸서 참조해라
 
 상글톤 객체 사용 시 주의 할점
-- 프로퍼티가 공유
+- 프로퍼티가 공유 (공유되기 때문에 thread safe 한 코드를 작성해야함)
 - ApplicationContext 초기 구동시 인스턴스 생성.
 
 ## Environment 1부 프로파일

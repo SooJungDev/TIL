@@ -64,7 +64,10 @@ DeadLock 처리
 - [Deadlock이 뭐지? (Java Thread와 Deadlock에 대한 고찰)](http://icednut.github.io/2016/08/06/20160806-about_deadlock/)
 
 ## boxing, unboxing 무엇인지, 자동으로 언제 일어나는지?
-- Boxing: 프리미티브 타입의 값을 래퍼 객체로 만드는것
+- 기본형(primitive type): byte,short,int,long,float,double,char,boolean,void
+- 래퍼클래스(wrapper class):Byte,Short,Integer,Long,Float,Double,Character,Boolean,Void
+
+- Boxing: 프리미티브 타입(기초자료형)의 값을 래퍼 객체로 만드는것
 - Unboxing: 래퍼 객체를 프리미티브 타입의 값으로 만드는것
 ~~~java
 Integer integerA = new Integer(1000); //Boxing
@@ -72,21 +75,90 @@ int num = integerA.intValue(); //Unboxing
 ~~~
 
 ~~~java
-Integer integerObj = new Integer(30);
-int sum = integerObj + 20;
-System.out.println(sum);
+Integer obj =61; //AutoBoxing
+Integer obj2=new Integer(69);
+int num1 = obj2; // AutoUnBoxing
 ~~~
-reson - 위의 예제에서는 Integer 객체와 int 타입의 값을 더했다. +연산자는 프리미티브 타입의 값을 더하는 연산자이기 떄문에
-Integer 객체로부터 int값이 자동으로 추출된 후에 더하기 연산이 실행됩니다.
+- 숫자 61을 Integer 객체에 넣기 위해서는 (Boxing) new Integer(61)과 같이 객체를 생성해야 하지만 위와 같이 대입하면     
+AutoBoxing이 자동으로 진행된다
+- Integer 객체에 있는 int값을 가져오기위해서는 (UnBoxing) obj2.intValue() 메소드를 사용하여 가져와야하지만 위와 같이  
+int형 변수에 Integer 객체를 대입하면 자동으로 UnBoxing이 진행된다
+
+- AutoBoxing과 AutoUnBoxing은 단지 기본형 타입과 상응하는 Wrapper class에만 일어난다 다른 경우에는 컴파일 에러가 발생
+ - Integer는 intValue(), Double은 doubleValue등만 AutoBoxing과 AutoUnBoxing이 발생한다
+ 
+~~~java
+Double obj=3.14; 
+int num1 = obj.intValue(); //(O)
+int num1 = obj; //(X)
+~~~
 
 참고
+- [[JAVA] Wrapper class 란? 그리고 AutoBoxing](https://hyeonstorage.tistory.com/168)
 - [자동 Boxing과 자동 Unboxing](https://zzdd1558.tistory.com/58)
 
 ## mutable, immutable
+- mutable : 객체 내의 특정 요소를 변경 할 수 있는 객체를 mutable 객체 ex) List,ArrayList,HashMap등
+- immutable: 반대로 객체내의 특정 요소의 값을 변경 할 수 없는 객체들을 말한다 ex)String, integer,Double등등
+
+immutable이란?
+- 생성 후 변경 불가한 객체. 그래서 immutable에는 set 메소드가 없음, 멤버변수 변경할수 없음, 리턴타입이 void도 없다.
+- Immutable을 쓰면 멀티스레드 환경에서 좀더 신뢰 할 수 있는 코드를 만들어내기 쉽다.
+
+대표적인 Immutable 클래스
+- String, Boolean, Integer, Float, Long 등등
+- heap 영역에서의 변경 불가
+- String a="a"; a="b"; 재할당은 가능
+- 이는 a가 reference 하고있는 heap 영역의 객체가 바뀌는것이지 heap 영역에 있는 값이 바뀌는 것은아님
+
+String vs StringBuffer
+- String은 immutable
+- StringBuffer는 mutable
+- StringBuffer가 String에 비해서 훨씬 빠르다라는 애기
+    - 객체를 새로 생성할 필요가 없기때문임
+ 
+Immutable의 유용성
+- 멀티스레드 환경에서 하나의 객체에 접근하는데 각각의 스레드끼리는 영향받으면 안되는 경우가 있습니다.   
+그럴때 한번 만들어진 객체의 값이 변하지 않는다는게 보장되면 편함
+    
+
+참고
+- [MUTABLE 과 IMMUTABLE 객체](https://yangyag.tistory.com/63)
+- [자바에서 Immutable이 뭔가요?](https://hashcode.co.kr/questions/727/%EC%9E%90%EB%B0%94%EC%97%90%EC%84%9C-immutable%EC%9D%B4-%EB%AD%94%EA%B0%80%EC%9A%94)
 
 ## generic erasure
+- 자바에서는 제너릭 클래스를 인스턴화 할때 해당 타입을 지워버린다.
+- 그 타입은 컴파일시 까지만 존재하고, 컴파일된 바이트코드에서는 어떠한 타입파라미터 정보를 찾아볼수 없음
+
+~~~java
+List<Integer> numbers = new ArrayList<>();
+~~~
+
+바이트 코드레벨에서는 new ArrayList(); 와 동일
+- 하위 호완성을 매우 중요시해서 제네릭을 사용하지 않았던 레거시코드에서도 돌아가기위해서
+
+제네릭
+- 제네릭은 다양한 타입의 객체들을 다루는 메서드나 컬렉션 클래스에서 컴파일 시 타입 체크를 해주는 기능
+- 즉 클래스 내부에서 사용할 데이터 타입을 나중에 인스턴스 생성할때 확정하는 것을 제너릭
+
+제네릭의 장점
+1.타입 안정성을 제공한다.
+2. 타입체크와 형변환을 생략 할 수 있으므로 코드가 간결해진다.
+
+참고
+- [[Java] 제네릭](https://devbox.tistory.com/entry/Java-%EC%A0%9C%EB%84%A4%EB%A6%AD)
+- [자바의 제네릭 (Generic)](http://wonwoo.ml/index.php/post/1743)
 
 ## encoding이 뭔지?, java의 한글은 몇바이트인지 , string에 문자열은 어떻게 저장되나?
+- 부호화나 인코딩은 정보의 형태나 형식을 변환하는 처리나 처리방식이다.
+- 문자 인코딩은 문자들의 집합을 부호화하는 방법이다.
+
+자바 내부에서 기본적으로 문자에대해서 유니코드 사용, 영문이든 한글이든 2바이트
+UTF-8에선 한글 3바이트
+
+참고
+- [인코딩 wiki](https://ko.wikipedia.org/wiki/%EC%9D%B8%EC%BD%94%EB%94%A9)
+- [자바에서 인코딩(encoding)](https://linuxism.ustd.ip.or.kr/588)
 
 
 ## static

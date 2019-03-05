@@ -142,7 +142,7 @@ List<Integer> numbers = new ArrayList<>();
 - 즉 클래스 내부에서 사용할 데이터 타입을 나중에 인스턴스 생성할때 확정하는 것을 제너릭
 
 제네릭의 장점
-1.타입 안정성을 제공한다.
+1. 타입 안정성을 제공한다.
 2. 타입체크와 형변환을 생략 할 수 있으므로 코드가 간결해진다.
 
 참고
@@ -156,38 +156,177 @@ List<Integer> numbers = new ArrayList<>();
 자바 내부에서 기본적으로 문자에대해서 유니코드 사용, 영문이든 한글이든 2바이트
 UTF-8에선 한글 3바이트
 
+String 은 두가지 생성방식이 있고 각각의 차이점이 존재함
+1. new 연산자를 이용한 방식
+    - Heap 영역에 존재하게 됨
+2. 리터럴을 이용한 방식
+    - String constant pool 이라는 영역에 존재 자바 7이전 perm 영역, 이후는 Heap 영역에 존재하기됨
+    - Heap 영역에 존재하게 된 이유는 runtime에 사이즈가 확장되지 않기 때문에 
+    - OutOfMemoryException을 발생시킬 수있음
+String은 값이 변경 될때마 새로운 객체를 생성하기 된다.이런작업을 수행하면서 메모리를 많이사용하게됨
+
+
 참고
 - [인코딩 wiki](https://ko.wikipedia.org/wiki/%EC%9D%B8%EC%BD%94%EB%94%A9)
 - [자바에서 인코딩(encoding)](https://linuxism.ustd.ip.or.kr/588)
-
+- [java String 객체에 대한 이해 (StringBuilder,StringBuffer 등을 사용해야 하는 이유 및 기타 String의 특징)](https://opentutorials.org/module/1226/8020)
+- [Java String 의 메모리에 대한 고찰](https://medium.com/@joongwon/string-%EC%9D%98-%EB%A9%94%EB%AA%A8%EB%A6%AC%EC%97%90-%EB%8C%80%ED%95%9C-%EA%B3%A0%EC%B0%B0-57af94cbb6bc)
 
 ## static
+static 은 보통 변수나 메소드 앞에 static 키워드를 붙여서 사용하게된다
+
+static 변수
+- 변수에 static 키워드를 붙이면 자바는 메모리 할당을 딱 한번만 하게 되어 메모리 사용에 이점을 볼 수 있게 된다.
+- 공유의 개념이 있음 
+- static 으로 설정하면 같은곳의 메모리 주소만 바라보기 때문에 static 변수의 값을 공유하게 되는것
+- 보통 변수의 static 키워드는 프로그래밍 시 메모리의 효율보다는 두번째 처럼 공유하기 위한 용도로 훨씬 더많이 사용하게 된다.
+
+static method
+~~~java
+public class Counter{
+    static int count = 0;
+    
+    Counter(){
+        this.count++;
+    }
+    
+    public static int getCount(){
+        return count;
+    }
+    
+    public static void main(String[] args){
+        Counter c1 = new Counter();
+        Counter c2 = new Counter();
+        
+        System.out.println(Couter.getCount());
+    }
+}
+~~~
+- getCount() 라는 static 메소드가 추가되었다. main 메소드에서 getCount()메소드는  
+Counter.getCount() 와 같이 클래스를 통해 호출 할 수 있게 된다.
+
+- static 메소드안에서 인스턴스 변수 접근이 불가능하다. 위 예에서 count는 static 변수이기 때문에
+static 메소드에서 접근이 가능한 것이다.
+
+- 보통 static 메소드는 유틸리티 성 메소드를 작성 할때 많이사용됨
+
+싱글톤 패턴(singleton patter)
+- 디자인 패턴중 하나
+- 싱글톤은 단 하나의 객체만 생성하게 강제하는 패턴이다. 
+- 즉 클래스를 통해 생성 할 수 있는 객체는 Only One, 즉 한개만 되도록 만드는것이 싱글톤이다.
+
+~~~java
+class Singleton{
+    private static Singleton one;
+    private Singleton(){}
+    
+    public static Singleton getInstance(){
+        if(one==null){
+            one = new Singleton();
+        }
+        return one;
+    }
+}
+
+public class SingletonTest {
+    public static void main(String[] args){
+        Singleton singleton1 = Singleton.getInstatance();
+        Singleton singleton2 = Singleton.getInstatance();
+        System.out.println(singleton1 == singleton2); // true 출력
+    }
+}
+~~~
+- 최초 getInstance 가 호출되면 one이 null이므로 new에 의해서 객체가 생성된다.
+- 이렇게 한번 생성되면 one은 static 변수이기 때문에 그 이후에는 null 이 아니게 된다.
+- 그런 후 다시 getInstance를 호출하면 one이 null이 아니므로 이미 만들어진 싱글톤 객체인 one을 항상 리턴하게 된다.
+
+
+참고  
+- [정적 변수와 메소드 (static)](https://wikidocs.net/228)
 
 ## stack, heap 영역별로 무엇이 저장되는지?
+Stack 영역
+- 지역 변수와 매개변수가 저장된다.
+- 참조 변수에 저장되는 메모리 주소는 스택영역에 저장되지만, 그주소가 가리키는 메모리는 모두 힙영역에 저장
 
+Heap 영역
+- new 명령어를 통해 생성된 인스턴스 변수가 저장됨
+- 참조 변수들은 실행 될때마다 많은 데이터들을 스택 메모리 영역에 뒀다 뺐다 하는게 매우 비효율적이다
+    - 힙영역에 그 주소가 가리키는 값이 저장되고(변수가 가리키고 있는값), 스택 메모리에는 간단하게 주소만 저장
+
+
+참고  
+- [자바 메모리 관리 - 스택 & 힙](https://yaboong.github.io/java/2018/05/26/java-memory-management/)
+- [자바 메모리 구](https://wanzargen.tistory.com/17)
 ## syhchronized{} 에 붙을때와 메소드에 붙을때 차이
+
+
+참고  
+- []()
 
 ## hashtable 에서 get,put의 시간복잡도
 
+
+참고  
+- []()
+
 ## int 배열 정렬 필요하면 어떻게하겠나?
+
+
+참고  
+- []()
 
 ## garbage collector가 어떻게 작동하는지? 정리대상클래스를 어떻게 판별하는지
 
+참고  
+- []()
+
 ## @Transactional 어노테이션과 propagation
+
+
+참고  
+- []()
 
 ## DB transaction isolation level
 
+
+참고  
+- []()
+
 ## sql injection이 무엇이고 어떻게 방지하냐
+
+참고  
+- []()
 
 ## CSRF 무엇이고 csrf token 작동원리가 무엇인지
 
+
+참고  
+- []()
+
 ## 회원가입 구현시 id,pw 를 어떻게 저장하는지
+
+
+참고  
+- []()
 
 ## 위키 같은 서비스 구현시 A와 B가 동시에 다른 내용으로 저장하는것을 방지하기 위해 어떻게 하겠나(html hidden)
 
+
+참고  
+- []()
+
 ## 테스트코드 작성 철학? 이 무엇인가
 
+
+참고  
+- []()
+
 ## javascript ES5, ES6 차이
+
+
+참고  
+- []()
 
 
 

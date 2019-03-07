@@ -321,21 +321,93 @@ GC와 Reachability
 PhantomReference, ReferenceQueue 등을 사용한다.
 
 
-
 참고  
 - [Java Reference와 GC](https://d2.naver.com/helloworld/329631)
 
 ## @Transactional 어노테이션과 propagation
+- 스프링 트랜잭션은 개발자의 편리하기위해 트랜잭션 관리를 위한 일관된 추상화를 제공
+Transaction의 기본설정은 확인되지 않는 Exception(Runtime Exception)발생시 RollBack 하도록 설정
+
+
+propagation (전파옵션)
+- REQUIRED: 부모 트랜잭션 내에서 실행하며 부모 트랜잭션이 없을 경우 새로운 트랜잭션을 생성
+- REQUIRES_NEW: 부모 트랜잭션을 무시하고, 무조건 새로운 트랜잭션 생성
+- SUPPORT: 부모 트랜잭션 내에서 실행하며 부모 트랜잭션이 없을 경우 nontransactionally로 실행
+- MANDATORY: 부모 트랜잭션 내에서 실행되며, 부모 트랜잭션이 없을 경우 예외가 발생
+- NOT_SUPPORT: nontransactionally로 실행하며 부모 트랜잭션 내에서 실행될 경우 일시정지
+- NEVER: nontransactionally로 실행되며 부모 트랜잭션이 존재한다면 예외가 발생
+- NESTED: 해당 메서드가 부모 트랜잭션에서 진행될 경우 별개로 커밋되거나 롤백될 수 있음.
+    - 둘러싼 트랜잭션이 없을 경우 REQUIRED와 동일하게 작동
 
 
 참고  
-- []()
+- [@Transactional](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html)
+- [Spring Transaction 옵션](https://taetaetae.github.io/2016/10/08/20161008/)
+- [Spring-framework-reference](https://docs.spring.io/spring/docs/4.2.x/spring-framework-reference/html/transaction.html)
+- [Spring Transaction Management Over Multiple Threads](https://dzone.com/articles/spring-transaction-management-over-multiple-thread-1)
 
 ## DB transaction isolation level
+트랜잭션이 보장해야되는 ACID
+- Atomicity(원자성): 한 트랜잭션 내에서 실행한 작업들은 하나의 작업으로 간주한다. 모두 성공 또는 모두 실패되어야됨
+- Consistency(일관성): 모든 트랜잭션은 일관성 있는 데이터베이스 상태를 유지한다. 이를테면 DB에서 정한 무결성 조건을 항상 만족
+- Isolation(격리성): 동시에 실행되는 트랜잭션들이 서로 영항을 미치지 않도록 격리해야한다.
+- Durability(지속성): 트랜잭션을 성공적으로 마치면 그 결과가 항상 저장되어야 한다.
 
+Isolation에 대한 이슈가 있음
+- 격리성을 완벽히 보장하기 위해 모든 트랜잭션을 순차적으로 실행한다면 동시성 처리 이슈가 발생한다.
+- 반대로 동시성을 높이기 위해 여러 트랜잭션은 병렬처리하게 되면 데이터의 무결성이 깨질 수 있다.
+
+격리성 관련 문제점  
+1.Dirty Read
+- 한 트랜잭션(T1)이 데이터에 접근하여 값을 'A'에서 'B'로 변경 했고, 아직 커밋하지 않았을때
+- 다른 트랜잭션(T2)이 해당 데이터를 read 하면?
+    - T2가 읽은 데이터는 B가 될 것임.
+    - 하지만 T1이 최종 커밋을 하지 않고 종료된다면 T2 데이터는 꼬이게됨
+    
+2.Non-Repeatable Read
+- 한 트랜잭션(T1)이 데이터를 Read 하고 있다. 이때 다른 트랜잭션(T2)가 데이터를 접근하여 값을 변경 또는 데이터를 삭제하고 커밋을 하면?
+    - 그 이후 T1이 다시 해당데이터를 Read 하고자 하면 변경된 데이터 혹은 사라진 데이터를 찾게된다.
+
+3.Phantom Read
+- 트랜잭션(T1) 중에 특정 조건으로 데이터를 검색하여 결과를 얻었다.
+- 이때 다른 트랜잭션(T2)가 접근해 해당 조건의 데이터 일부를 삭제 또는 추가 했을때  
+아직 끝나지 않은 T1이 다시 한번 해당 조건으로 데이터를 조회하면 T2에서 추가/삭제 된 데이터가 함께 조회/누락된다.
+- T2가 롤백을 하면 데이터가 꼬인다
+
+
+4단계 격리수준을 나누었음.  
+내려갈수록 격리 수준이 높아져서 언급된 이슈는 적게 발생하지만, 동시처리 성능은 떨어진다.
+참고 트랜잭션이 발생하면 Rock이 걸리는데,  
+SELECT 시 에는 공유 락,  
+CREATE/INSERT/DELETE 시에는 배타적 락이 걸림
+
+1.Read Uncommitted
+- 한 트랜잭션에서 커밋하지 않은 데이터에 다른 트랜잭션이 접근 가능하다. 즉 커밋하지 않은 데이터를 읽을 수 있다.
+    - 이 수준은 당연히 위에서 언급한 모든 문제에 대해 발생가능성이 존재한다.
+    - 대신, 동시 처리 성능은 가장 높음
+- 발생 문제점: Dirty Read, Non-Repeatable Read, Phantom Read
+
+2.Read Committed
+- 커밋이 완료된 데이터만 읽을 수 있다.
+ - Dirty Read가 발생할 여지는 없으나, Read Uncommitted 수준보다 동시 처리 성능은 떨어진다.
+ - 대신 Non-Repeatable Read 및 Phantom Read는 발생 가능하다.
+ - 데이터베이스들은 보통 Read Committed를 디폴트 수준으로 지정한다.
+- 발생 문제점:Non-Repeatable Read, Phantom Read
+
+3.Repeatable Read
+- 트랜잭션 내에서 한번 조회한 데이터를 반복해서 조회해도 같은데이터가 조회된다.
+ - 이는 개별 데이터 이슈인 Dirty Read나 Non-Repeatable Read는 발생하지 않지만,  
+   결과 집합 자체가 달라지는 Phantom Read는 발생가능하다.
+- 발생 문제점: Phantom Read
+
+4.Serializable
+가장 엄격한 격리수준
+- 위 3가지 문제점을 모두 커버 가능하다.
+- 하지만 동시 처리 성능은 급격히 떨어 질 수 있다.
 
 참고  
-- []()
+- [트랜잭션, 트랜잭션 격리수준(Isolation Level)](https://feco.tistory.com/45)
+- [Transaction Isolation Levels in DBMS](https://www.geeksforgeeks.org/transaction-isolation-levels-dbms/)
 
 ## sql injection이 무엇이고 어떻게 방지하냐
 - SQL Injection이란 Web hacking 기법중 하나이다. 
@@ -398,7 +470,7 @@ CSRF Token
 
 
 참고  
-- []()
+- [안전한 패스워드 저장](https://d2.naver.com/helloworld/318732)
 
 ## 위키 같은 서비스 구현시 A와 B가 동시에 다른 내용으로 저장하는것을 방지하기 위해 어떻게 하겠나(html hidden)
 

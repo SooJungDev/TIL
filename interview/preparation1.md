@@ -272,18 +272,58 @@ put:   평균 O(1), 최악 : O(n)
 remove:  평균 O(1), 최악 : O(n)
 
 참고  
-- 책 hellcoding 그림으로보는 알고리
+- 책 hello coding 그림으로보는 알고리즘
 
 ## int 배열 정렬 필요하면 어떻게하겠나?
+java.util.Arrays
+- Arrays 클래스에는 배열을 다루기 위한 다양한 메소드가 포함되어 있다.
+- Arrays 클래스의 모든 메소드 클래스 메소드(static method)이므로, 객체를 생성하지 않고도 바로 사용 가능
+- 이 클래스는 java.util 패키지에 포함되므로, 반드시 import 문으로 java.util 패키지를 불러오고 나서 사
+
+- java.util.Arrays 클래스 사용
+Arrays.sort() 함수를 사용해서 정렬
+
+- 오름차순
+~~~java
+int[] arr ={21,4,19,31,16};
+Arrays.sort(arr);
+~~~
+
+- 내림차순
+~~~java
+Integer[] arr2={4,2,1,5,3};
+Arrays.sort(arr2, Collections.reverseOrder());
+~~~
+- Comparator 로는 Collections class의 reverseOrder() 함수를 이용
+- 내림차순 적용
 
 
 참고  
-- []()
+- [java 배열 정렬](https://jamesdreaming.tistory.com/162)
+- [Arrays 클래스](http://tcpschool.com/java/java_api_arrays)
 
 ## garbage collector가 어떻게 작동하는지? 정리대상클래스를 어떻게 판별하는지
+Java의 가비지 컬렉터(Garbage Collector)는 크게 다음 2가지 작업을 수행
+1. 힙(heap) 내 객체중에 가비지(garbage)를 찾아낸다.
+2. 찾아낸 가비지를 처리해서 힙의 메모리를 회수한다.
+
+GC와 Reachability
+- Java GC는 객체가 가비지인지 판별하기 위해서 reachability라는 개념을 사용
+- 어떤 객체에 유효한 참조가 있으면 reachable로 없으면 unreachable로 구별
+- unreachable 객체를 가비지로 간주해 GC를 수행한다.
+- 한 객체는 여러 다른 객체를 참조하고, 참조된 다른 객체들도 또다른 객체들을 참조 할 수 있으므로 객체들은 참조 사슬을 이룬다.
+- 이런 상황에서 유효한 참조 여부를 파악하려면 항상 유효현 최초의 참조 
+    - 이를 객체의 참조 root set이라고 한다.
+    
+- java GC는 GC 대상 객체를 찾고, 대상 객체를 처리(finalization)하고, 할당된 메모리 회수하는 작업으로 구성된다.
+- 애플리케이션은 사용자 코드에서 객체의 reachability를 조절하여 java GC에 일부 관여 할수있다.
+- 객체의 reachability를 조절하기 위해서 java.lang.ref 패키지의 SoftReference, WeakReference,
+PhantomReference, ReferenceQueue 등을 사용한다.
+
+
 
 참고  
-- []()
+- [Java Reference와 GC](https://d2.naver.com/helloworld/329631)
 
 ## @Transactional 어노테이션과 propagation
 
@@ -337,8 +377,19 @@ SQL injection 공격의 종류에는 크게 3가지
 ## CSRF 무엇이고 csrf token 작동원리가 무엇인지
 - CSRF 공격(Cross Site Request Forgery)은 웹 어플리케이션 취약점 중 하나로 인터넷 사용자(희생자)가 자신의 
 의지와는 무관하게 공격자가 의도한 행위(수정,삭제,등록 등)를 특정 웹사이트르 요청하게 만드는 공격
-- 
 
+CSRF 공격이 이뤄지려면 다음조건이 만족되어야함
+- 위조 요청을 전송하는 서비스(페이스북)에 희생자가 로그인 상태
+- 희생자가 해커가 만든 피싱 사이트에 접속
+
+CSRF 방어 기법
+- Referrer 검증
+- Security Token 사용
+
+CSRF Token
+- 우선 사용자의 세션의 난수 값을 저장하고, 사용자의 요청마다 해당 난수 값을 포함 시켜 전송시킵니다.
+- 이후 Back-end단에서 요청을 받을 때마다 세션이 저장된 토큰값 요청파라미터에 전달되는 토큰 값이 일치하는지 검증하는 방법입니다.
+- 이 방법도 XSS 취약점 있다면 CSRF 공격에 취약해집니다.
 
 참고  
 - [CSRF](https://itstory.tk/entry/CSRF-%EA%B3%B5%EA%B2%A9%EC%9D%B4%EB%9E%80-%EA%B7%B8%EB%A6%AC%EA%B3%A0-CSRF-%EB%B0%A9%EC%96%B4-%EB%B0%A9%EB%B2%95)
@@ -356,17 +407,57 @@ SQL injection 공격의 종류에는 크게 3가지
 - []()
 
 ## 테스트코드 작성 철학? 이 무엇인가
+- Test-Driven Development
+- Lean 소프트웨어 개발론의 핵심철학중 하나 "결함은 발견 즉시 해결"이다. 린 개발은 이것의 실천법으로 테스트 주도 개발을 제시한다
+- 반복테스트를 이용한 소프트웨어 개발법
+- 작은 단위의 테스트케이스를 작성하고 이를 통과하는 코드를 추가하는 단계를 반복하여 소프트웨어를 구현
+- 목표는 "Clean code that works" 이다. 
+- 오직 자동화된 테스트가 실패할 경우에만 새로운 코드를 작성한다.
+- 중복을 제거함
+- 테스트가 주된목적이 아닌 "문제를 먼저 정의하고, 문제의 해답을 찾아가는 과정"
+- 내가 지금 만들어야 할 것이 무엇인지 우선적으로 명확하게 정의한 후에 그 내용을 테스트로 표현하는게 TDD의 근본 취지
+    - BDD(Behavior Driven Development) 
+ - 개발자가 아닌 사용자 요구사항 관점 명세정의
+ 
+TDD 개발법
+아래 단계의 반복으로 진행 
+RED: 실패하는 작은 테스트 케이스를 작성한다. 처음에는 컴파일조차 안될 수있다.
+GREEN: 테스트를 통과하는 코드를 작성한다.
+REFACTORING: 테스트를 통과하기 위해 만든 코드의 모든 중복을 제거하고, 불명확한 것을 명확히 한다.
+ - 같은 코드가 세번이상 사용되면
+ 
+코드구조
+Given 에는 "어떤 상황"이 들어간다.
+When에는 "어떻게 동작한다"가 들어간다.
+Then에는 "동작한 결과가 어떠해야 한다"가 들어간다.
+
+TDD 장점
+- 개발자의 방향을 잃지 않게 유지
+- 품질 높은 소프트웨어 모듈 보유: 간결한 코드 유지 가능
+- 자동화된 단위 테스트 케이스 소유: 개발자가 필요한 시점에 언제든 수행 할 수 있으며, 시스템의 이상 유무를 바로 확인 할 수 있다.
+- 사용설명서 & 의사소통의 수단: 작성한 테스트 케이스는 제품 코드 사용 설명서이자 동시에 다른 개발자와 소통하는 커뮤니케이션 통로가됨
+- 설계 개선: TDD는 주기를 짧게 설정하도록 권한다. 개발자는 성취감을 자주 느낄 수 있다.
 
 
 참고  
-- []()
+- [TDD란?](https://m.blog.naver.com/PostView.nhn?blogId=hannaj92&logNo=220665822239&proxyReferer=https%3A%2F%2Fwww.google.com%2F)
 
-## javascript ES5, ES6 차이
-
+## javascript ES5, ES6 차이점
+ES5(2009) 
+ES6(ES2015)
+- 호이스팅이 사라진것 같은 효과
+- 함수 단위 스코프에서 블록단위 스코프로 변경
+- this를 동적으로 바인딩 하지 않는 화살표 함수
+- 모듈화 지원
+- 콜백 지옥에서 구원해줄 Promise
+    - ES8(ES2017) asyn, await
+- Default, Rest 파라미터
+- 해체 할당, Spread 연산자
+- 템플릿 리터렁
+- .....등등등
 
 참고  
-- []()
-
+- [ES6?! ES2015?! ECMAScript란 도대체 무엇인가?](https://luckydavekim.github.io/web/2018/02/07/what-is-the-ecmascript/)
 
 
 

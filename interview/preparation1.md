@@ -257,18 +257,22 @@ Heap 영역
 
 참고  
 - [자바 메모리 관리 - 스택 & 힙](https://yaboong.github.io/java/2018/05/26/java-memory-management/)
-- [자바 메모리 구](https://wanzargen.tistory.com/17)
+- [자바 메모리 구조](https://wanzargen.tistory.com/17)
 ## syhchronized{} 에 붙을때와 메소드에 붙을때 차이
-
+- 코드를 메소드 수준에서 관리 할 수 있다
+- 코드를 블록 수준에서 관리할 수있다.
+    - 동기화 영역을 최소화 할때 synchronized 블록을 사용
 
 참고  
-- []()
+- [synchronized 키워드의 의미를 알고 메소드와 블록에 붙을 때의 차이를 알아야 한다.](https://opentutorials.org/module/1226/8028)
 
 ## hashtable 에서 get,put의 시간복잡도
-
+get : 평균 O(1), 최악 : O(n)
+put:   평균 O(1), 최악 : O(n)
+remove:  평균 O(1), 최악 : O(n)
 
 참고  
-- []()
+- 책 hellcoding 그림으로보는 알고리
 
 ## int 배열 정렬 필요하면 어떻게하겠나?
 
@@ -294,15 +298,50 @@ Heap 영역
 - []()
 
 ## sql injection이 무엇이고 어떻게 방지하냐
+- SQL Injection이란 Web hacking 기법중 하나이다. 
+- 웹 애플리케이션의 뒷단에 있는 Database에 질(쿼리 보내는 것)하는 과정에서 
+일반적인 값외에 악의적인 의도를 갖는 구문을 삽입하여 공격자가 원하는 SQL 쿼리문을 실행하는기법이다.
+주로 사용자가 입력한 데이터를 제대로 필터링,이스케이핑 하지 못했을 경우에 발생한다.
+- 요즘의 거의 모든 데이터베이스 엔진은 유저 입력이 의도치 않은 동작을 하는 것을 방지하기 위해 escape 함수와
+prepared statement 제공한다.
+
+SQL injection 공격의 종류에는 크게 3가지
+- 인증우회 (AB: Auth Bypass)
+    - 보통 아이디와 패스워드를 입력하는 로그인 페이지를 타겟으로 행해지는 공격이다.
+    - SQL 쿼리문의 true/false의 논리적 연산 오류를 이용하여 로그인 인증 쿼리문이 무조건 true의 결과값이 나오게 하여 인증을 무력화
+    - ex) ID와 password에 or 1=1-- 입
+- 데이터 노출(DD: Data Disclosure)
+    - 타켓 시스템의 주요 데이터 절취를 목적으로 하는 방식
+    - 악의적인 구문을 삽입하여 에러를 유발시키는 
+    -  오류가 나타난다면 그것을 가지고 데이터 베이스 구조를 유추할수있음
+    - 그렇기 때문에 오류 페이지 또는 오류 메세지가 출력되서는 안됨
+- 원격명령 실행(RCE: Remote Command Excute)
+
+방어방법
+1. 대부분의 SQL Injection의 경우 입력받을떄 특수문자 여부를 검사하여 방어한다.
+    - 아이디와 패스워드를 입력받는 입력에 특수문자가 포함되어 있는지 검증 로직을 추가하여 특수문자가 입력된 경우 해당 요청을 막아 낼 수 있다.
+2. SQL 서버에 오류가 발생 했을 시 해당하는 에러 메시지를 표시해선 안된다.
+- 원본의 테이블에는 접근권한을 높이고 일반 사용자는 view로만 접근하게 되면 원본테이블이 공격에 의해 노출되는 정도를 줄일 수 있음
+3. Statement 대신 preparestatement를 사용하자
+- mysql의 Preparedstatement 구문을 사용하면 특수문를 자동으로 escaping 해준다.
+클라이언트 측 자바스크립트 폼 입력값을 우선 검증함.
+- 하지만 자바스크립트는 공격자가 꺼버리면 그만이기떄문에 서버측에서 입력값을 한번 더 필터한다.
+4. hash function을 사용하자.
+- 사용자 입력값을 데이터베이스 그대로 저장하고 사용하지 말아야 한다. 특히 패스워드의 경우가 그렇다.
+무조건 SHA-256 이상의 보안성을 갖는 해시함수로 해싱한 뒤 저장해야 한다.
+
 
 참고  
-- []()
+- [SQL Injection이란 무엇인가](https://asfirstalways.tistory.com/360)
 
 ## CSRF 무엇이고 csrf token 작동원리가 무엇인지
+- CSRF 공격(Cross Site Request Forgery)은 웹 어플리케이션 취약점 중 하나로 인터넷 사용자(희생자)가 자신의 
+의지와는 무관하게 공격자가 의도한 행위(수정,삭제,등록 등)를 특정 웹사이트르 요청하게 만드는 공격
+- 
 
 
 참고  
-- []()
+- [CSRF](https://itstory.tk/entry/CSRF-%EA%B3%B5%EA%B2%A9%EC%9D%B4%EB%9E%80-%EA%B7%B8%EB%A6%AC%EA%B3%A0-CSRF-%EB%B0%A9%EC%96%B4-%EB%B0%A9%EB%B2%95)
 
 ## 회원가입 구현시 id,pw 를 어떻게 저장하는지
 

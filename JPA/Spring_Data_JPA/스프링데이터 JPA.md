@@ -300,6 +300,13 @@ QueryByExampleExecutor
 스프링 @Transactional
 - 클래스, 인터페이스, 메소드에 사용 할 수 있으며, 메소드에 가장 가까운 애노테이션이 우선순위가 높다
 - [Transaction 반드시 읽어볼것 그래야 설정해서 쓸수있는지 알수있음](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html)
+- RuntimeException and Error 가 발생하면 rollback
+- checked exceptions 이 발생하면 기본적으로 롤백하지 않는다 설정해줘야함
+    - checked exception 이란??
+        - RuntimeException 을 상속하지 않는 예외
+        - 체크예외가 발생할수 있는 메소드를 사용 할 경우, 복구가 가능한 예외들이기 때문에 반드시 예외처리를 하는 코드를 함께 작성해야함
+        - catch문이든, throws든 이를 해결하지 않으면 컴파일 에러가 발생
+    
 
 JPA 구현체로 Hibernate를 사용할때 readOnly를 사용하면 좋은점
 - Flush 모드(데이터베이스 싱크(변경)할건지 정하는 모드)를 NEVER 로 설정하여, Dirty checking을 하지 않도록 한다.

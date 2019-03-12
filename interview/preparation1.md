@@ -421,7 +421,7 @@ SQL injection 공격의 종류에는 크게 3가지
 - 인증우회 (AB: Auth Bypass)
     - 보통 아이디와 패스워드를 입력하는 로그인 페이지를 타겟으로 행해지는 공격이다.
     - SQL 쿼리문의 true/false의 논리적 연산 오류를 이용하여 로그인 인증 쿼리문이 무조건 true의 결과값이 나오게 하여 인증을 무력화
-    - ex) ID와 password에 or 1=1-- 입
+    - ex) ID와 password에 or 1=1-- 입력
 - 데이터 노출(DD: Data Disclosure)
     - 타켓 시스템의 주요 데이터 절취를 목적으로 하는 방식
     - 악의적인 구문을 삽입하여 에러를 유발시키는 
@@ -446,6 +446,20 @@ SQL injection 공격의 종류에는 크게 3가지
 참고  
 - [SQL Injection이란 무엇인가](https://asfirstalways.tistory.com/360)
 
+## Blind SQL Injection이란?
+- 임의의 SQL 구문을 삽입하여 인가되지 않은 데이터를 열람할 수 있는 공격방법
+- 일반적인 SQL Injection과 동일
+- 다만 일반적인 SQL Injection의 경우에는 조작된 쿼리를 입력해 한번에 원하는 데이터를 얻을 수있지만  
+Blind SQL Injection은 쿼리 결과에 따른 서버의 참과 거짓 반응을 통해 공격을 수행한다.
+- 즉 쿼리에 대한 결과가 참일때와 거짓일때 서버의 반응이 나타나야 하며 이를 구분 할 수 있어야 한다.
+~~~
+select * from users where id='admin' and ascii(substr(select pw from user where id ='admin',1,1))<100 -- and pw='입력받은 pw'
+~~~
+위와 같은 방법을 반복하면 pw의 첫글자를 알아 낼 수 있으며 더나아가 pw의 전체를 알아낼수 있음
+
+참고
+- [Blind SQL Injection ](https://4rgos.tistory.com/9?category=694721)
+
 ## CSRF 무엇이고 csrf token 작동원리가 무엇인지
 - CSRF 공격(Cross Site Request Forgery)은 웹 어플리케이션 취약점 중 하나로 인터넷 사용자(희생자)가 자신의 
 의지와는 무관하게 공격자가 의도한 행위(수정,삭제,등록 등)를 특정 웹사이트르 요청하게 만드는 공격
@@ -465,6 +479,14 @@ CSRF Token
 
 참고  
 - [CSRF](https://itstory.tk/entry/CSRF-%EA%B3%B5%EA%B2%A9%EC%9D%B4%EB%9E%80-%EA%B7%B8%EB%A6%AC%EA%B3%A0-CSRF-%EB%B0%A9%EC%96%B4-%EB%B0%A9%EB%B2%95)
+
+## XSS와 CSRF 차이점
+- XSS는 공격대상이 Client이고 CSRF는 Server이다.
+- XSS는 사이트변조나 백도어를 통해 클라이언트에 대한 악성공격을 한다.
+- CSRF는 요청을 위조하여 사용자의 권한을 이용해 서버에 대한 악성공격을한다.
+
+참고
+- [XSS와 CSRF에 대하여](https://glasgowkiss.tistory.com/16)
 
 ## 회원가입 구현시 id,pw 를 어떻게 저장하는지
 - Spring security 사용
@@ -546,7 +568,29 @@ ES6(ES2015)
 참고  
 - [ES6?! ES2015?! ECMAScript란 도대체 무엇인가?](https://luckydavekim.github.io/web/2018/02/07/what-is-the-ecmascript/)
 
+## UDP와 TCP란 무엇인가?
+- 모두 전송계층에서 동작하는 프로토콜
+- 두 프로토콜은 모두 패킷을 한 컴퓨터에서 다른 컴퓨터로 전달해주는 IP프로토콜을 기반으로 구현되었지만 서로다른 특징을 가지고 있음
 
+TCP(Transmission Control Protocol)
+- 신뢰성있는 데이터 전송을 지원하는 연결 지향형 프로토콜
+- TCP 는 패킷을 성공적으로 전송하면 ACK라는 신호를 받음
+- 만일 ACK 신호가 제 시간에 도작하지 않으면 Timeout이 발생하여, 패킷 손실이 발생한 패킷에 대해 다시 전송해줌
+- 연결 지향적인 TCP는 3-way handshaking 이라는 과정을 통해 연결 후 통신
+- 또한 흐름제어와 혼잡제어를 지원하며 데이터의 순서를 보장함
+- UDP에 비해 속도가 느림 
+- 대부분 HTTP 통신, 이메일, 파일전송에 사용됨
+
+UDP
+- 전송계층의 비연결형 프로토콜
+- TCP와 달리 연결 설정없음 혼잡제어하지 않기때문에 tcp보다 빠른장점
+- 데이터 전송에 대한 보장을 하지 않기떄문에 패킷 손실이 발생 할 수 있음
+- UDP는 이런 특성떄문에 DNS, 멀티미디어에서 사용
+- UDP 헤더에 있는 Checksum 필드를 통해 최소한의 오류는 검출함
+- 최근에는 속도가 빠른 UDP에 신뢰성 있는 데이터 젖송을 추가하여 서버를 구현하기도함
+
+- [TCP와 UDP 비교 정리](https://swalloow.tistory.com/77)
 
 ## 출처
 - [하이퍼커넥트 면접 후기](https://nsh330.tistory.com/entry/%ED%95%98%EC%9D%B4%ED%8D%BC%EC%BB%A4%EB%84%A5%ED%8A%B8-%EB%A9%B4%EC%A0%91-%ED%9B%84%EA%B8%B0)
+- 잡플래닛 면접 후기

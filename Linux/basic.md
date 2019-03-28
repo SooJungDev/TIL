@@ -69,7 +69,246 @@ sudo apt-get install git
 
 ## 패키지 매니저 homebrew
 
-## 프로세스 모니터링(ps, top, htop)
+사용법 알고싶으면 
+~~~
+brew help
+~~~
+
+- htop 을 찾는다
+~~~
+brew search htop
+~~~
+
+- htop을 설치한다
+~~~
+brew install htop
+~~~
+
+- 삭제하기전에 정확하게 알고있어야함
+- 리스트를 알수있음
+~~~
+brew list
+brew uninstall htop
+~~~
+
+- 이미 설치한 프로그램을 upgrade 하고싶다면
+~~~
+brew upgrade vim
+~~~
+
+- brew update
+~~~
+brew update
+~~~
+
+## 다운로드 방법 -wget
+~~~
+wget 다운로드받을 링크
+~~~
+
+~~~
+wget -O 저장하고싶은 이름 다운로드받을 링크
+~~~
+
+## 다운로드방법 -git
+- 버전관리 시스템
+- 형상관리를 하기 쉽게 해줌
+
+- 디렉토리명에 프로젝트소스를 복제함 
+~~~
+git clone 프로젝트url 디렉토리명
+~~~
+
+## IO Redirection 
+- Input
+- Output
+- Redirection : 방향을 돌려서 다른것들로 출력 해주는것
+
+output  
+- ls -l 의 결과를 result.txt 에 저장시킴
+~~~
+ls -l > result.txt
+~~~
+
+- > standard output 1>  (표준출력을 의미 1생략할수있음)
+
+- standard error 2> 의미함 에러를 저장할때는 앞에 2를 붙여줌
+~~~
+rm rename2.txt 2> error.log
+~~~
+
+
+input  
+
+- 표준 입력으로 받은 경우
+~~~
+cat < result.txt
+~~~
+
+- 기본 열줄만 출력해줌
+~~~
+head linux.txt
+~~~
+
+- 한줄만 출력해줌  command-line argument 를 준것
+~~~
+head -n1 linux.txt
+~~~
+
+- 밑은 standard input 을 준것
+~~~
+head -n1 < linux.txt 
+~~~
+
+- one.txt 에 해당 결과를 저장해라 
+- 표준입력,출력에 대한 redirection을 모두함
+~~~
+head -n1 < linux.txt > one.txt 
+~~~
+
+append
+
+- >> 가 두개면 결과를 append 해서 추가해줌 덧댄다.
+~~~
+ls -al >> result.txt
+~~~
+
+- 여러개의 입력을 하나로 합친다
+~~~
+mail egoing@gmail.com <<eot
+hi
+my
+name
+is
+egoing
+eot
+~~~
+- eot 가 들어가면 입력이 끝나는것임 << 잘안씀
+
+- 낭떨어지 같은곳 아무것도 나오지않음 
+~~~
+ls -al > /dev/null
+~~~
+
+## 쉘과 쉘스크립트
+- 운영체제에서 중심이되는 kernel
+    - hardware 를 제어함
+- 커널 바깥쪽을 감사고 있는 shell
+    - 사용자가 명령어 입력한것을 kernel 에 전해주고 제어해줌
+
+### bash vs zsh   
+~~~
+echo $0
+-bash
+~~~
+
+cd 하고 tab 
+- zsh: 숨김파일은 안나옴
+- bash: tab 두번눌러야하고 전부다 나옴
+
+cd 하고 경로
+- zsh: cd /h/u 치고 tab 하면 경로가 자동으로되줌 cd why dir1으로 하면 dir1으로감 
+
+커널과 쉘은 분리되어있기 때문에 자기에게 맞는 쉘을 선택해서 사용하면됨 
+
+### Shell script 소개
+- 여려개의 명령을 순차적으로 실행하는것 명령의 순서 각본 스크립트를 어딘가에다가 적어놓고 재사용 할수 있게 하는것 
+
+~~~
+mkdir script
+cd script/
+touch a.log b.log c.log
+ls -l
+~~~
+
+- backup 파일을 만든다.
+~~~
+mkdir bak
+cp *.log bak
+ls -l bak
+~~~
+
+- 두번 실행 할 경우 에러가 나기떄문에 있다면, 만들고 없다면 만들지않는다
+- 자주일어나는 작업이라고 생각해야함 왜쓰는가에 공감해야함!
+
+### shell script 사례
+
+~~~
+nano backup
+~~~
+
+~~~shell
+#!/bin/bash
+if ! [ -d bak ]; then
+       mkdir bak
+fi
+cp *.log bak       
+~~~
+
+- ctrl+x 누르고 y 저장해줌
+
+~~~
+./backup
+chmod +x backup
+~~~
+- 실행 기능을 추가해준다
+- x 표시가 추가되어있음 그뜻은 실행 가능하다는 뜻임 
+
+~~~
+./backup
+~~~
+- 실행시킨다.
+
+## 디렉토리 구조와 파일 찾는법
+
+### 디렉토리 구조 
+- bin : user binaries
+- sbin : system binaries
+- etc : configuration files
+- proc : process information
+- var : variable files
+- tmp : temporary files
+- usr : user programs
+    - usr/bin usr/sbin 등등 구분되어있음 
+- home: home directories
+    - 사용자의 디렉토
+- opt : Optional add-on Applications
+
+### 파일찾는법 - locate 와 find
+
+- database 에서 찾음
+- 하루에 한번 해당정보를 올려줌
+~~~
+locate
+sudo updatedb
+~~~
+
+- find 실제로 뒤짐
+- 옵션이 많기때문에 구글에서 찾아서 사용
+~~~
+sudo find / -name *.log 
+~~~
+
+- 검색된 파일을 삭제한다
+~~~
+find . -type f -name "tecmint.txt" -exec rm -f {} \;
+~~~
+
+### 파일찾는법 - whereis 와 $PATH
+- 실행파일을 찾아줌
+~~~
+whereis ls
+~~~
+
+~~~
+echo $PATH
+~~~
+
+## 프로세스와 실행
+
+### 컴퓨터의 구조
+
+### 프로세스 모니터링(ps, top, htop)
 
 - ps 
     - 프로세스 리스트를 보여줌

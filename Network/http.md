@@ -68,7 +68,7 @@ Content-Length: 101
     - Content-Type: 메세지 바디 종류
     - Content-Length: 메세지 바디길이
     - if-Modified-Since: 페이지가 수정되었으면 최신버전 페이지 요청을 위한 필드, 만일 요청한 파일이 필드에 지정된 시간이후로 변경하지않았다면 서버로부터 데이터를 전송받지않음
-    - Refer: 특정 페이지에서 링크를 클릭하여 요청을 하였을 경우에 나타남
+    - Referer: 특정 페이지에서 링크를 클릭하여 요청을 하였을 경우에 나타남
     - Accept-Language: 클라이언트가 인식 할 수 있는 언어로 우선수위 지정이 가능함
     - Accept-Encoding: 클라이언트가 인식 할 수 있는 인코딩 
 - 요청바디(entity)
@@ -120,3 +120,5 @@ Content-Length: 101
   - [HTTP 구조](http://sjh836.tistory.com/81)
   - [http 헤더 구조](https://12bme.tistory.com/325)
   - [HTTPS와 SSL 인증서, SSL 동작방법](https://wayhome25.github.io/cs/2018/03/11/ssl-https/)
+  - [HTTP (HyperText Transport Protocol)의 이해](http://wiki.gurubee.net/pages/viewpage.action?pageId=26739929)
+  - [HTTP 헤더의 종류 및 항목](https://gmlwjd9405.github.io/2019/01/28/http-header-types.html)

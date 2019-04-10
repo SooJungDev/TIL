@@ -342,6 +342,56 @@ sudo htop
     - 첫번째 1분간의 cpu , 5분, 15분 평균치를 내린것
     - 코어 숫자가 달라지면 의미가 달라
 
+### 백그라운드 실행
+Ctrl+z 실행중인 프로그램을 백그라운드로 보내는 단축키, 이기능을 실행하면 명령이 일시 정지됩니다.
+& 가 명렁어 뒤에 붙으면 명령어가 실행될때 백그라운드로 실행됩니다
+ex) ls -alR / > result.txt 2> error.log &
+jobs: 백그라운드 작업들의 목록을 보여줍니다.
+
+### 항상 실행 - 데몬의 개념
+daemon 또는 Service
+- 항상 실행된다는 것이 특징이 있음(항상 켜져있다)
+    - Server 라고 불리는것들
+    
+### Service와 자동실행
+~~~
+sudo apt-get install apache2
+~~~
+
+~~~
+cd /etc/init.d
+ls
+~~~ 
+
+- /etc/init.d
+    - daemon 이 떠있는 곳
+
+- 아파치를 띄움
+~~~
+sudo service apache2 start
+~~~
+
+- 떠있는지 확인
+~~~
+ps aux | grep apache2
+~~~
+
+- 아파치를 죽임
+~~~
+sudo service apache2 stop
+~~~
+
+~~~
+cd ..
+cd r(tab을누름) 
+ls -l   
+~~~
+- rc1.d/ rc2.d/ rc3.d 라고 하는 디렉토리가있음
+- rc3.d 존재하는 목록을 보면 S라고 시작하면 실행됨
+    - rc3.d 링크를 걸어주면됨
+    - GUI 면 rc5.d 에다가 링크를 걸어주면됨
+
+
 
 ## SSH
 - 원격제어를 사용할때 씀

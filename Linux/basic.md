@@ -15,7 +15,7 @@
 - pwd : 현재 위치하고 있는 디렉토리를 알려주는 명령어
 - mkdir : 새로 생성할 디렉토리명
  - mkdir -p dir1/dir2/dir3/dir4 
-    - -p 옵션을 주면 여러개의 디렉토릐를 한꺼번에 만들 수 있
+    - -p 옵션을 주면 여러개의 디렉토릐를 한꺼번에 만들 수 있음
 - touch empty_file.txt :empty_file.txt  의 빈파일이 만들어짐
 - cd : cd 이동할 디렉토리의 경로명
 
@@ -390,8 +390,208 @@ ls -l
 - rc3.d 존재하는 목록을 보면 S라고 시작하면 실행됨
     - rc3.d 링크를 걸어주면됨
     - GUI 면 rc5.d 에다가 링크를 걸어주면됨
+    
+### cron
+- 정기적으로 시스템이 해야될 일들
+~~~
+crontab -e 
+~~~
 
+~~~
+*/1 * * * * date >> date.log 2>&1
+~~~
 
+~~~
+tail -f date.log
+~~~
+
+사례
+- 사용자 이메일 보낼때
+    - 백그라운드로 만통의 이메일을 보내는 작업
+    
+### 쉘을 실행할떄 실행
+- 스타트업 스크립트
+~~~
+alias ll='ls -al'
+~~~
+
+~~~
+echo $SHELL
+/bin/bash
+~~~
+
+~~~
+vi .bashrc
+alias ll='ls -al'
+source ~/.bashrc
+~~~
+
+재부팅 하지 않고 적용하는법 
+- 바로 적용되지 않기 때문에 source ~/.bashrc 해준다.
+
+## 사용자
+- 다중사용자가 되는 순간 시스템 복잡도는 높아짐 
+
+id
+- 나는 누구인가?
+who
+- 이컴퓨터에는 누가 접속해 있나?
+~~~
+id
+who
+~~~
+
+관리자(super(root) user)와 일반 사용자(user) 
+- 일반 유저($) 슈퍼유저라면(#)
+
+su 라는 명령어를 씀
+~~~
+su - root
+exit
+~~~
+
+~~~
+sudo passwd -u root  // (unlock)
+sudo passwd -l root // (lock)
+~~~
+
+사용자 추가
+~~~
+sudo useradd -m duru
+sudo passwd duru
+su - duru
+~~~
+
+슈퍼유저권한주기
+~~~
+sudo usermod -a -G sudo duru
+~~~
+
+## 권한
+- Permission : 파일과 디렉토리 권한 
+    - 읽기 쓰기 실행 권한을 지정할수있음
+    
+~~~
+touch perm.txt
+ls -l perm.txt
+echo 'hi' > perm.txt
+cat perm.txt
+~~~
+
+- type : - 파일 d 디렉토리
+- access mode (세등분으로 나눌수 있음) r:read x:execute w:write
+    - 첫번째 오너의 권한(파일의 소유자)
+    - 두번째 그룹의 권한
+    - 세번째 Other 의 권한
+- owner
+- group
+
+권한을 변경하는 방법 chmod
+
+- other 에 read 권한을 제거한다. read 시 Permission denide
+~~~
+chmod o-r perm.txt
+~~~
+
+- other 에  read 권한을 설정한다
+~~~
+chmod o+r perm.txt
+~~~
+
+- other 에  write 권한을 설정한다
+~~~
+chmod o+w perm.txt
+~~~
+
+- user(자기자신에) read 권한은 뺀다
+~~~
+chmod u-r perm.txt
+~~~
+
+실행의 개념과 권한설정 - execute  
+
+~~~
+#!/bin/bash
+echo 'hi hi hi hi'
+~~~
+
+실행해라. 실행이 되지않음
+~~~
+./hi-machine.sh
+~~~
+
+~~~
+/bin/bash hi-machine.sh
+~~~
+
+~~~
+chmod u+x hi-machine.sh
+~~~
+
+~~~
+chmod o+x hi-machine.sh
+~~~
+
+directory 권한
+~~~
+mkdir perm;cd perm;echo 'hi' > perm.txt
+~~~
+
+- other perm 폴더의 읽기권한을 제거함 
+    - 디렉토리를 열람할 수 없음
+~~~
+chmod o-r perm
+~~~
+
+- other perm 폴더의 읽기권한을 추가함
+~~~
+chmod o+r perm
+~~~
+
+- perm 밑에 모든 디렉토리 권한을 바꾸고싶다 하위까지
+~~~
+chmod -R o+w perm
+~~~
+
+class & operation  
+- 1 : execute only
+- 2 : write only
+- 4 : read only
+
+- x,x,x 모든사용자가 execute 만 사용
+~~~
+chmod 111 perm.txt
+~~~
+
+- w,w,w 모든사용자가 execute 만 사용
+~~~
+chmod 222 perm.txt
+~~~
+
+- r,r,r 모든사용자가 execute 만 사용
+~~~
+chmod 444 perm.txt
+~~~
+
+- 위의 숫자를 조합해서 권한을 줄 수 있음 
+
+- 권한을 모두 줄 수 있게 하려면 777
+~~~
+chmod 777 perm.txt
+~~~
+
+- a: 모든사용자 모든사용자에 대해서 read 권한을 준다.
+~~~
+chmod a+r perm.txt
+~~~
+
+- a: 모든사용자 모든사용자에 대해서 read,write,execute 권한을 준다.
+~~~
+chmod a=rwx perm.txt
+~~~
+
+**더자세히 참고사이트**
+- [리눅스 권한 관리 명령어 사용법 정리 (chmod, chown, chgrp 명령어)](https://withcoding.com/103)
 
 ## SSH
 - 원격제어를 사용할때 씀

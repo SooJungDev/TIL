@@ -4,7 +4,7 @@
 - 생활코딩 리눅스 강좌듣고 리눅스 기초에대해서 다잡을 필요가 있다!
 - 열심히 들어보자~~
 
-##환경설정
+## 환경설정
 - codeonweb
 - ubuntu
 - 등등
@@ -592,6 +592,169 @@ chmod a=rwx perm.txt
 
 **더자세히 참고사이트**
 - [리눅스 권한 관리 명령어 사용법 정리 (chmod, chown, chgrp 명령어)](https://withcoding.com/103)
+
+## group
+- 파일과 디렉토리를 여러 사용자들이 공동으로 관리 할 수 있는 방법
+- group으 로 묶고 파일에 그룹을 부여
+
+~~~
+cd var
+~~~
+- 변화가 잦은 파일들이 모여있는곳 var
+
+~~~
+sudo mkdir developer
+cd developer
+echo 'hi, egoing' > egoing.txt
+~~~
+
+- 새로운 그룹을 추가한다.(일반사용자는 사용불가)
+    - !! 번은 전에 입력했던 명령어
+~~~
+sudo groupadd developer
+sudo !! (밑에처럼가능)
+~~~
+
+- 잘됬는지 확인하려면 밑에 파일 확인하면됨
+~~~
+nano /etc/group
+~~~
+
+- 이미 존재하는 유저에 추가
+~~~
+sudo usermod -a -G developer soojung
+sudo !!
+~~~
+
+쉘에 다시접속해준다.
+
+- 현재 디렉토리의 소유자를 변경하고 싶으면 chown 사
+~~~
+sudo chown root:developer .
+~~~
+
+## internet
+- 브라우저에 google.com(domain name) 입력한다. (request)
+- google.com 은 클라이언트에게 화면을 표시해준다 (response)
+
+- request, response 가 왔다갔다 거리는 행위 통신이라고함
+    - request : client
+    - response: server
+
+- 서버에 접속하려면 도메인 네임으로 접속하거나 ip로 접속할 수 있음
+~~~
+ping google.com
+~~~
+
+- ex) 전화번호부 전화번호를 입력해서 전화를 거는 경우도 있지만 보통 이름으로 전화함
+    - 도메인네임(이름), ip(전화번호) 같은 이유 이름을 기억하는게 더쉽기 때문에 
+    
+- DNS : 이세상에 모든 도메인 네임에 해당되는 아이피를 알고있음 (ex: 전화번호부)
+
+- 내가 접속한 컴퓨터 google.com -> DNS 에 접속해서 ip를 알아냄 -> 내가접속한 컴퓨터에게  해당 ip 주소를 줌
+
+~~~
+ip addr
+~~~
+- inet 뒤에 있는게 나의 ip (private ip)
+- 실제 ip
+
+~~~
+curl ipinfo.io/ip
+~~~
+- 자기에게 접속한 그 접속의 결과적인 ip (public ip)
+- 위와 조회한게 둘다 같은수도 있고 다른수도있다.
+    - 대부분 다름 (라우터가 껴있는경우)
+    - 같은경우(회선과 동일)
+    
+다른이유는??!!
+- 통신사에서 계약을 맺음
+- 통신사에서 회선을 넣어주고 컴퓨터랑 연결함
+    - 통신사는 그회선에 대해 ip를 줌
+- 회선에 붙는 여러가지 기계들이 있다면 회선마다 다른 ip 를 줌
+    - 보통은 이런식으로 인터넷을 쓰지않음!!!!
+- 회선에다가 보통 공유기(Router)를 붙임
+    - 하나의 회선으로 여러대의 컴퓨터를 사용함 (사용료 절감)
+- 라우터가 회선에 대한 ip 를 가지게됨 (public address)
+    - 여러대의 장치는 사설 ip를 가지게됨 (private address)
+
+- 공유기로 묶인 상태이면 그자체를 서버로 사용 할 수 없음
+- 똑같은 와이파이에 들어있으면 접속 할 수 있음 
+
+## apache 웹서버
+- web server를 리눅스에 설치하는법
+
+
+- 클라이언트 웹브라우저 -> 웹 서버 (request)
+- 클라이언트 웹브라우저 <- 웹 서버 (response)
+
+- 웹브라우저 (ie, chrome, firefox 등등)
+- 웹서버(Apache, nginx,iis 등)
+
+- 아파치 서버를 설치한다
+~~~
+sudo apt-get update;
+sudo apt-get install apache2
+~~~
+
+- 아파치 서버를 키고 끄는 법
+~~~
+sudo service apache2 start
+sudo service apache2 stop
+sudo service restart 
+~~~
+
+- 아파치가 잘떠있는지 확인
+~~~
+sudo htop
+~~~
+
+- elinks 쉘 환경에서 인터넷 사용 할수 있게 해줌
+~~~
+sudo apt-get install elinks
+~~~
+
+- 내 ip를 접속한다.
+~~~
+ip addr
+~~~
+
+- 자신의 ip를 넣고 입력하면 apache2 화면에 표시될거임
+    - ip 말고 자기자신으로 접속 약속되어있는 규칙 localhost(127.0.0.1)
+~~~
+elinks http://10.x.x.x/
+~~~
+
+configuration
+~~~
+cd etc/apache2
+nano apache2.conf
+cd site-enabled
+ls -l
+nano 000-default.conf
+cd /var/www/html
+ls -al
+mv index.html.bak
+elinks http://127.0.0.1/index.html
+sudo nano index.html
+~~~
+
+log
+- 웹서버에 로그는 어디있을까? 검색해서 알아냄
+~~~
+cd /var/log/apache2/
+cat access.log
+~~~
+
+- tail 끝에 10줄만 출력
+- tail -f 옵션을주면 실시간으로 변경되는걸 확인 할 수 있음
+~~~
+tail /var/log/apache2/access.log
+tail -f /var/log/apache2/access.log
+~~~
+
+
+
 
 ## SSH
 - 원격제어를 사용할때 씀

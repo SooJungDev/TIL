@@ -83,11 +83,151 @@ public final class CaseInsensitiveString{
     
     //계약 깨짐 - 대칭성에 위배됨
     @Override
-    public boolean 
+    public boolean equals(Object o){
+        if(o instanceof CaseInsesitivieString)
+            return s.equalsIgnoreCase((CaseInsesitiveString) 0).s);
+        if(o instanseof String) //한쪽으로만 상호 운용된다.
+            return s.equalsIgnoreCase((String) o);
+        return false;    
+    }
+    ...//나머지코드 생략
+}
+~~~    
+- equals 메소드에서 대소문자를 구분하지 않는 문자열(CaseInsensitiveString 객체)과 일반문자열(String 객체) 모두를 같이 처리하려고 한다.
+
+~~~java
+CaseInsesitiveString cis = new CaseInsensitiveString("Polish");
+String s = "polish";
+~~~
+- cis.equals(s)는 true 반환
+- 그러나 CaseInsensitiveString 의 equals 메소드는 일반 문자열 처리하고 있는 반면
+- String 의 equals 메소드는 대소문자를 구분하지 않는 문자열을 인식하지 못하는 것이 문제임
+- 따라서 s.equals(cis)는 false 반환 
+    - 대칭성을 위반
+    
+~~~java
+List<CaseInsensitiveString> list = new ArrayList<CaseInsensitiveString>();
+list.add(cis);
+~~~
+- 일단 equals 계약을 어기면,우리객체와 같이 사용되는 다른 객체들이 어떻게 동작할지 알수 없음
+
+- 문제를 해소하려면 equals 메소드로 부터 String 객체를 처리하는 코드를 제거하면됨
+~~~java
+@Override
+public boolean equals(Object o){
+    return o instanseof CaseInsensitiveString &&
+      ((CaseInsensitiveString) o).s.equalsIgnoreCase(s);
+}
+~~~
+
+
+이행성(Transitivity)
+- 첫번째 객체가 두번째 객체와 동일하고 두번째 객체가 세번째 객체와 동일하다면 첫번째 객체는 세번째 객체와 같아야 함
+
+- 기존 수퍼 클래스에 값 컴포넌트(value component) Color 객체를 추가하는 서브 클래스 생각
+    - equals 메소드가 객체를 비교하는데 필요한 정보를 서브 클래스에서 추가 제공
+
+- 정수 좌표이 점을 나타내는 불변(immutable) 클래스
+~~~java
+public class Point{
+    private final int x;
+    private final int y;
+    
+    public Point(int x, int y){
+        this.x=x;
+        this.y=y;
+    }
+    
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof Point))
+            return false;
+        Point p =(Point)0;
+        return p.x == x && p.y === y;    
+    }
+    
+    ...// 나머지코드 생략
 
 }
+~~~
 
-~~~    
+- 점마다 색상을 추가해서 다음과 같은 서브 클래스
+~~~java
+public class ColorPoint extends Point{
+    private final Color color;
+    
+    public ColorPoint(int x, int y, Color color){
+        super(x,y);
+        this.color = color;
+    }
+    
+    // 나머지 코드 생략
+}
+~~~
+
+~~~java
+@Override
+public boolean equals(Object o){
+    if(!(o instanceof ColorPoint))
+        return false;
+    return super.equals(o) && ((ColorPoint) o).color == color;
+}
+~~~
+- 이 메소드에 문제점 Point 객체를 ColorPoint 와 비교할때 그리고 그반대로 비교할떄 다른결과 나옴
+- Point 객체를 ColorPoint 비교할때는 색상이(Color) 비교에서 빠짐 반대로 비교할떄는 항상 false 반환
+    - 인자값이 틀리기 떄문에    
+~~~ java
+Point p = new Point(1,2);
+ColorPoint cp = new ColorPoint(1,2, Color.RED);
+~~~
+- 이경우 p.equals(cp)는 true 반면 cp.equals(p)는 false
+
+~~~java
+// 계약 깨짐 - 이행성에 위배된다
+@Override
+public boolean equals(Object o){
+    if(!(o instanseof Point))
+        return false;
+        
+     // 만일 o가 Point 객체라면 Color를 빼고 비교한다.
+     if(!(o instanceof ColorPoint))
+        return o.equals(this);
+        
+      // o가 ColorPoint 객체라면, Point와 Color 모두 비교한다.
+      return super.equals(o) && ((ColorPoint)o).color == color;
+}
+~~~
+- Point 객체를 비교할때는 색상(Color)를 무시하도록 다음과 같이 ColorPoint.equals 수정하여 문제 해결할수있지만 문제가생김
+    - 이행성에 대한 문제
+
+~~~java
+ColorPoint p1 = new ColorPoint(1,2,Color.RED);
+Point p2 = new Point(1,2);
+ColorPoint p3 = new ColorPoint(1,2,Color.BLUE);
+~~~
+- p1.equals(p2), p2.equals(p3) true 반환
+- p1.equals(p3)는 false 반환
+    - 명백한 이행성 위반
+   
+   
+- **인스턴스 생성이 가능한 클래스의 서브 클래스 값 컴포넌트를 추가하면서 equals 계약을 지킬 수 잇는 방법은 없음**
+
+~~~java
+// 리스코프(Liskov)의 대체원칙(substitution principle)에 위배된다.
+@Override public boolean equals(Object o){
+    if(o == null || o.getClass() != getClass())
+        return false;
+     Point p = (Point) o;
+     return p.x == x && p.y ==y;
+}
+~~~
+- 위 경우 비교하는 두객체의 클래스만 같을떄만 효과 있음
+
+- 정수의 좌표 값을 갖는 점이 단위원(Unit Circle) 상에 있는지 알려주는 메소드작성
+~~~java
+// 단위원 상의 모든 접믈 포함하도록 UnitCircle 초기화 한다.
+private static final Set<Point> unitCicle;
+~~~
 
 ## 참고
 - 책 이펙티브자바 

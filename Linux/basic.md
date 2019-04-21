@@ -980,7 +980,87 @@ ls -l
 ~~~
 rsync -av src/ dest
 ~~~
- 
+
+전송할 컴퓨터에 ip를 알아낸다
+~~~
+ip addr
+~~~
+전송할 컴퓨터에서
+- z 는 압축해서 P는 압축상황을 보여주는 프로그레스 현황을 볼수있음
+~~~
+rsync -azP ~/rsync/src/ k8805@192.168.0.65:~/rsync/dest
+~~~
+
+## ssh public private key
+- 두개의 컴퓨터 준비
+~~~
+ssh egoing@192.168.0.67
+~~~
+
+- 강력한 비밀번호를 생성해줌 ssh-keygen 
+~~~
+ssh-keygen
+cd ~
+ls -al
+~~~
+
+- 키가 생성된것을 볼수있음
+- 공개키와 비공개키가 만들어짐
+~~~
+id_rsa
+id_rsa.pub
+~~~
+
+- 키를 옮겨준다 linux2 authorized_keys 밑에 자동으로 붙여줌
+    - linux1 에있었던 id_rsa.pub 을 자동으로 붙여줌
+~~~
+ssh-copy-id egoing@192.168.0.67
+~~~
+
+rsync
+- 컴퓨터와 컴퓨터 사이에 파일을 동기화 하는것
+- rsync를 하기위해서는 기본으로 로그인이 필요함
+- ssh 자동으로 로그인 하게 해두면 동기화를 할수 있음
+
+~~~
+mkdir rsync3
+cd rsync3
+touch test{1..100}
+~~~
+
+~~~
+mkdir rsync_welcome
+~~~
+
+~~~
+rsync -avz . egoing@192.168.0.67:~/rsync_welcome
+~~~
+
+- rsync 는 기본적으로 ssh 라는 통신방법을 이용해서 통신방법을 하기때문에
+현재 사용자의 ssh 디렉토리로 들어가서 거기에있는 private key 와 public key 가 있으면 자동으로 전송해줌
+- cron 정기적으로 명령을 실행시킬 떄 사용 로그인해야된다면 자동으로 할수 없음 자동로그인을 시켜놓으면 정기적으로 rsync 같은 작업을 해놓아서 백업하는 경우에 사용
+
+RSA
+~~~
+ls ~/.ssh/
+ssh egoing@192.168.0.67
+~~~
+
+~~~
+ls ~/.ssh
+~~~
+
+대칭적인 방식 
+- encrypt: 키를 이용해서 암호화 
+- decrypt: 키를 이용해서 복호화
+
+ssh client: id_rsa, id_rsa_pub
+ - ssh 디렉토리 안에서 id_rsa 찾아봄 랜덤키를 암호화시킴
+ - 암호화된 랜덤 키를 다시 전송함 
+ssh server: authorized_keys (id_rsa_pub) 가지고있음
+ - 서버는 클라이언트에게 랜덤하게 생성된 키를 줌
+ - 받은 랜덤키를 복호화를 시킴 복호화된 결과가 자기가 전송했던 랜덤키를 비교하고 같다면 로그인 시켜줌
+
 
 
 ## 참고사이트

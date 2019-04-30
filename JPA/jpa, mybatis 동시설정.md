@@ -19,6 +19,22 @@
 compile("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.0.1")
 ~~~
 
+
+Mybatis 설정
+
+application.yml
+~~~
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: varchar
+~~~
+- mybatis.configuration.map-underscore-to-camel-case : true
+    - 쿼리를 통해 결과 값을 가지고 올때 컬럼명 underscore 형식으로 되어있는것을 camel case 로 자동으로 변경해주는 옵션
+- mybatis.configuration.jdbc-type-for-null : varchar
+    - 데이타베이스 상에 null 을 만나면 varchar 형으로 캐스팅을 해줌
+    - mybatis는 null을 적절치 처리해 주지못함 다양한 이유로 에러가 발생함 때문에 에러없이 null 값 저채를 처리할수있게 해주는 옵션
+
 Mapper
 - JPA 의 Repository interface에 대응되는 Mapper interface 정의
 - @Mapper ,@Repository 붙여준다
@@ -54,5 +70,7 @@ public class ExampleService{
 ~~~
 
 ## 참고사이트
+- 밑에 사이트에 잘 설명해주셨다!!!!
 - [JPA 환경에서 MyBatis 를 사용하여 데이타를 가지고 오기](https://jogeum.net/10)
+- [JPA 개요와 Spring Boot 개발 환경구성](https://jogeum.net/5?category=766565)
 - [SpringBoot + MyBatis + Gradle + MySql](https://medium.com/cashwalk/springboot-mybatis-gradle-mysql-7090359d5427)

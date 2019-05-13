@@ -26,7 +26,7 @@ ps -ef | grep tomcat
 
 - 킬 명령어로 해당 pid 강제종료
 ~~~
-kill -9 해pid
+kill -9 해당pid
 ~~~
 
 - 톰캣이 있는곳에서 ~/bin 밑에서 실행시켜준다 shutdown.sh 

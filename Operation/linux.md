@@ -70,3 +70,22 @@ sudo service 서비스명 start
 ~~~
 lsof -i :80
 ~~~
+
+
+## bind error address already in use 해결방법
+
+- netstat 를 이용해 현재 사용중인 port 에대한 pid 를 검색한다.
+ - 나는 해줬더니 pid 가 - 이런식으로 나와서 sudo 를 붙여줬더니 잘나왔다!
+~~~
+sudo netstat -lntp         
+~~~
+
+- 해당 호트를 사용하는 프로세스를 kill 해준다
+~~~
+sudo kill -9 pid
+~~~
+
+- 그러고 해당서비스를 다시실행시켜줬다.
+~~~
+sudo service 서비스명 start
+~~~

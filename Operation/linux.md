@@ -117,3 +117,8 @@ rm -rf *2019-01*
 ~~~
 df -h
 ~~~
+
+-  catalina.out 초기화하고싶을때 
+~~~
+cat /dev/null > catalina.out
+~~~

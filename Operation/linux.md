@@ -7,16 +7,11 @@ ifconfig -a | res
 ~~~
 
 ## grep 으로 로그확인
-- A 100 해당 라인 앞으로 100줄 더
-- B 100 해당 라인 뒤로 100줄 더
 ~~~
-grep -A 100 -B "keyword" xxxx.txt
+tail -n1000 | grep -i "keyword" catalina.out
 ~~~
-
-- 예시
-~~~
- grep -A 100 -B .json xxxx.txt
-~~~
+- tail -n1000 n만큼 라인을 출력 마지막부터 1000줄
+- grep -i 대소문자 구별없이 찾는다.
 
 ## 톰캣
 - 톰캣 프로세스 확인

@@ -13,6 +13,11 @@ tail -n1000 | grep -i "keyword" catalina.out
 - tail -n1000 n만큼 라인을 출력 마지막부터 1000줄
 - grep -i 대소문자 구별없이 찾는다.
 
+~~~
+grep -A100 -B100 "keyword" catalina.out
+~~~
+- 해당 키워드에 뒤로 100줄 앞으로 100줄 찾을수있음
+
 ## 톰캣
 - 톰캣 프로세스 확인
 ~~~

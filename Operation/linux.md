@@ -48,6 +48,22 @@ tail -f 로그파일이름
 ~~~
 
 
+## Nginx 로그확인하기
+
+- 에러로그 위치는 /var/log/nginx/error.log
+~~~
+tail -f /var/log/nginx/error.log
+~~~
+
+- Nginx의 서버 접근 기록 실시간 모니터링
+~~~
+tail -f /var/log/nginx/access.log
+~~~
+
+- 시스템 에러 및 하드웨어 에러로그 위치 /var/log/messages
+- /var/log/secure : 사용자 인증관련 로그
+
+
 ## 스프링부트 서비스 확인하고 서비스 올렸다가 내리기
 
 - 서비스명으로 확인

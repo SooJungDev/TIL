@@ -38,7 +38,7 @@
 ## Spring에서 Batch job의 구성 
 - Step: Spring에서 배치 잡은 step의 모음으로 구성됨 job은 Step이 순차적으로 수행하게됨
 - Tasklet : Tasklet은 각 Step에서 수행되는 로직, 개발자가 Custom Logic을 만들 수 있고 또는 보통 batch의 경우 데이터를 
-  ETL(Extract, Transform, Loading)하는 형태이기 때문에 Spirng Batch에서 미리 정의해 놓음
+  ETL(Extract, Transform, Loading)하는 형태이기 때문에 Spring Batch 에서 미리 정의해 놓음
     1. itemReader : 데이터를 읽는 컴포넌트
     2. itemProcessor : 읽은 데이터를 처리 
     3. itemWriter : 처리한 데이터를 저장
@@ -199,9 +199,39 @@ public class SimpleJobConfiguration {
  
  INSERT INTO BATCH_JOB_SEQ (ID, UNIQUE_KEY) select * from (select 0 as ID, '0' as UNIQUE_KEY) as tmp where not exists(select * from BATCH_JOB_SEQ);
  ~~~
+ 
+## 스프링 부트 배치 이해하기
+1. 읽기(read): 데이터 저장소(일반적으로 데이터베이스)에서 특정 데이터 레코드를 읽습니다.
+2. 처리(processing): 원하는 방식으로 데이터 가공/처리 합니다.
+3. 쓰기(write): 수정된 데이터를 다시 저장소(데이터베이스)에 저장합니다.
+
+- Job과 Step은 1:M
+- Step 과 ItemReader, ItemProcessor, ItemWriter 1:1
+- Job 이라는 하나의 큰 일감(Job)에 여러단계(Step)을 두고 각 단계를 배치의 기본 흐름대로 구성함
+
+## Job
+- Job은 배치 처리 과정의 하나의 단위로 만들어 표현한 객체, 또한 전체 배치 처리에 있어 항상 최상단 계층에 있음
+- 위에서 하나의 Job안에는 여러 Step(단계)가 있다고 설명 했떤 바와 같이 스프링 배치에서 Job 객체는 여러 Step 의 인스턴스를 포함하는 컨테이너 
+- Job 객체를 만드는 빌더는 여러개 있습니다. 여러 빌더를 통합한 처리하는 공장인 JobBuilderFactory 로 원하는 Job을 쉽게 만들수 있음
+
+~~~java
+public class JobBuilderFactory{
+   private JobRepository jobRepository;
+   
+   public JobBuilderFactory(JobRepository jobRepository){
+        this.jobRepository=jobRepository;
+   }
+   
+   public JobBuilder get(String name){
+      JobBuilder builder = new JobBuilder(name).repository(jobRepository);
+      return builder;
+   }
+~~~
+- Job
     
 ## 참고사이트
   - [Spring Batch 가이드](https://jojoldu.tistory.com/324?category=635883)
   - [Spring Batch 가이드- Bath Job 실행해보기](https://jojoldu.tistory.com/325?category=635883)
   - [Spring Batch 개념정리](http://bcho.tistory.com/763)
   - [자바기반 스케줄링 프로그래밍](https://www.slideshare.net/redrebel/ss-42209509)
+  - [Spring Batch 간단 정리](https://cheese10yun.github.io/spring-batch-basic/)

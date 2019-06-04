@@ -227,7 +227,26 @@ public class JobBuilderFactory{
       return builder;
    }
 ~~~
-- Job
+- JobBuilderFactory는 JobBuilder를 생성 할 수 있는 get() 메서드를 포함하고 있음. get() 메서드는 새로운 JobBuilder 를 생성해서 반환하는 것을 확인
+- JobBuilderFactory에서 생성되는 모든 JobBuilder 가 레포지토리를 사용합니다.
+- JobBuilderFactory 는 JobBuilder 를 생성하는 역할만 수행. 이렇게 생성된 JobBuilder 를 이용해서 Job을 생성해야함
+- JobBuilder는 직접적으로 Job을 생성하는 것이 아니라 별도의 구체적 빌더를 생성하여 변환하여 경우에 따라 job 생성 방법이 모두 다를 수 있는 점을 유연하게 처리할 수있음
+
+
+
+## ItemReader
+- ItemReader 는 Step 의 대상이 되는 배치 데이터를 읽어오는 인터페이스
+- File, Xml, DB 등 여러 타입의 데이터를 읽어 올수 있음
+
+## ItemProcessor
+- ItemProcessor 는 ItemReader로 읽어온 배치 데이터를 변환하는 역할을 수행합니다. 이것을 분리하는 이유는 다음과 같음
+- 비지니스 로직 분리: ItemWriter는 저장만 수행, ItemProcessor 는 로직 처리만 수행해 역할을 명확하게 분리
+- 읽어온 배치 데이터와 씌여질 데이터의 타입이 다를 경우에 대응 할 수 있기 때문이다.
+
+## ItemWriter
+- ItemWriter는 배치 데이터를 저장합니다. 일반적으로 DB나 파일에 저장합니다.
+- ItemWriter도 ItemReader와 비슷한 방식을 구현합니다. 제너릭으로 원하는 타입을 받고 write() 메서드는 List를 사용해서 저장한 타입의 리스트를 매개변수로 받음
+
     
 ## 참고사이트
   - [Spring Batch 가이드](https://jojoldu.tistory.com/324?category=635883)

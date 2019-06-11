@@ -55,6 +55,11 @@ tail -f 로그파일이름
 tail -f /var/log/nginx/error.log
 ~~~
 
+- -f 옵션 앞에 숫자를 주면 길게 볼수 있음 
+~~~
+tail -2000f catalina.out
+~~~
+
 - Nginx의 서버 접근 기록 실시간 모니터링
 ~~~
 tail -f /var/log/nginx/access.log

@@ -68,6 +68,18 @@ tail -f /var/log/nginx/access.log
 - 시스템 에러 및 하드웨어 에러로그 위치 /var/log/messages
 - /var/log/secure : 사용자 인증관련 로그
 
+## Nginx ssl 설정파일 위치 및 확인방법
+
+- 해당 디렉토리 밑으로 들어간다.
+~~~
+cd /etc/nginx/conf.d/
+~~~
+
+- 해당 파일 확인방법
+~~~
+cat 이름.conf | less
+~~~
+
 
 ## 스프링부트 서비스 확인하고 서비스 올렸다가 내리기
 

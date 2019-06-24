@@ -22,6 +22,16 @@ for(int i=0; i<totalSize; i+=chunckSize){ // chunkSize 단위로 묶어서 처�
 ~~~
 **chunkSize 별로 묶어서 처리됨**
 
+## commit-interval
+- commit 이 되는 단위 개수
+- 트랜잭션 커밋이 호출되기전에 처리되어야 하는 아이템들의 갯수
+- chunk 메소드 chunkSize 인자값으로 입력되는 값이 commit-interval 값이다
+- 이갯수는 reader 가 읽고 processor 가 처리해서 writer 로 넘겨지는 갯수를 의미
+- 그리고 트랜잭션이 설정되어 있다면 이갯수로 단위로 트랜잭션 커밋이 발생한다.
+- 스프링 배치는 reader 가 읽고나서 processor 처리한 갯수가 commit-interval 만큼 쌓이면 writer item들을 보내서 write 함
+- 결국 위에 !!! 이야기랑 똑같음
+
+
 ## ChunkOrientedTasklet 
 ~~~ java
 
@@ -361,3 +371,4 @@ Setting a fairly large page size and using a commit interval that matches the pa
     
 ## 참고사이트
   - [Spring Batch 가이드 - Chunk 지향 처리](https://jojoldu.tistory.com/331?category=635883)
+  - [Spring Batch Commit-interval](https://sheerheart.tistory.com/entry/Spring-Batch-commitinterval%EC%97%90-%EB%8C%80%ED%95%9C-%EC%A0%95%EB%A6%AC)

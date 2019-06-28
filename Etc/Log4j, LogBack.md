@@ -73,6 +73,22 @@ Email(SMTP), Network 등이 있다.
 - slf4j 를 통해 연관 라이브러리들이 다른 logging framework 를 쓰더라도 logback 으로 통합
 - Logback 을 이용하여 로깅을 수행하기 위해서 필요한 주요 설정 요소 Logger, Appender, Encoder 3가지 읬음
 
+- Logger: 실제 로깅을 수행하는 구성요소로 Level 속성을 통해서 출력할 로그의 레벨을 조절 할 수 있음
+- Appender: 로그메세지가 출력될 대상을 결정하는 요소
+- Encoder: Appender에 포함되어 사용자가 지정한 형식으로 표현 될 로그 메시지를 변환하는 역할을 담당하는 요소
+
+Logback에서 설정파일을 작성하는 방법은 2가지
+- XML 을 이용한 설정방법: logback.xml 설정 파일 작성후 해당 파일을 클래스패스에 위치시킴
+- Groovy 언어를 이용한 설정방법: logback.groovy 로 설정 파일 작성후 해당 파일을 클래스패스에 위치시킨다.
+
+장점
+- log4j 보다 약 10배정도 빠르게 수행되도록 내부가 변경 되었으며 , 메모리 효율성 좋아짐
+- log4j때부터 광범위한 테스트를 진행한 경험을 가지고 있으며, logback은 더욱 높은 레벨의 테스트를 통해 검증
+- 문서화가 잘되어있음
+- 설정파일을 변경 하였을 경우 , 서버 재기동 없이 변경 내용이 자동으로 갱신
+- 서버 중지 없이 I/O Failure 에 대한 복구 지원
+- RollingFileAppender 를 사용할 경우 자동적으로 오래된 로그를 지워주며 Rolling 백업을 처리한다.
+
 
 
   

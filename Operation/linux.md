@@ -80,6 +80,11 @@ cd /etc/nginx/conf.d/
 cat 이름.conf | less
 ~~~
 
+## nginx 상태 확인하기
+~~~
+service nginx status
+~~~
+
 
 ## 스프링부트 서비스 확인하고 서비스 올렸다가 내리기
 

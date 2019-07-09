@@ -28,10 +28,45 @@ public Book findBook(ISBN isbn) {....}
       - 파라미터가 하나만 있으면 해당 인스턴스를 반환한다
       - 파라미터가 둘 이상이면 모든 파라미터의 해시를 계산한 키를 반환한다.
       
-      
-     
-      
+## 커스텀 키 생성 선언
+- 캐싱은 일반적이므로 대상 메서드는 인자값이 두개가 있다면 모두 같아야 같은 캐쉬를 보내는데 리턴값에 영향을 미치는 요소가 page 인자값만 영향을 미치면
+캐쉬 키 값을 별도로 설정할수있음
+
+~~~ java
+@Cacheable (key = "#page")
+public List<String> getList(int page, String, query){
+
+  .....
+}
+~~~    
+- 위와 같이 설정하면 같은 page 값일 경우 query 에 어떤 인자가 들어오더라도 같은 캐쉬값을 반환함
+
+- 아래와 같은 코드 캐시가 정상적으로 동작하지 않음!!!
+~~~java
+class Person
+{
+    private String name;
+    
+    public String getName(){return name;}
+}
+
+@Cacheable(key = "#kim")
+public List<String> getList(Person kim){
+....
+}
+~~~ 
+- **작동하지 않음!!!!!!!**
+   - 객체의 native 값을 이용하거나 **Object일 경우 hashCode() 만을 사용하여 키 값을 생성하는데 Object 의 hashCode는 객체에서 재정의하지 않은 이상
+     무조건 다른값**이 들어감
+- spring 4.0 이후 버젼에서는 SimplekeyGenerator 를 사용하며 hashCode 만이 아닌 복합키를 사용함
+
+- 인자 값이 Object 객체인 경우 객체내 값을 이용하여 키값을 쓸 수 있음 (내부도 native 값이거나 String 같은 heap 내에 주소가 유일한 경우에만 가능)
+~~~java
+@Cacheable(key = "#kim.name")
+public List<String> getList(Person kim){
+~~~      
       
 
 ## 참고사이트
 - [Spring 레퍼런스 28장 캐시 추상화](https://blog.outsider.ne.kr/1094)
+- [@Cacheable key값 정하기](https://jistol.github.io/java/2017/02/09/springboot-cache-key/)

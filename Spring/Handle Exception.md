@@ -30,5 +30,28 @@ public class DemoControllerAdvisor{
 }
 ~~~
 
+## e.printStackTrace() 보다는 로거 사용
+
+~~~java
+try {
+    process();
+}catch (IOException e) {
+    e.printStackTrace();
+}
+~~~
+
+~~~java
+try{
+    process();
+}catch(IOException e){
+    log.error("fail to process file", e);
+}
+~~~
+- Tomcat 에서 e.printStackTrace() 콘솔로 찍힌 값은 {TOMCAT_HOME}/logs/catalina.out 에만 남음
+- 로깅 프레임워크를 이용하면 파일을 쪼개는 정책을 설정 할 수 있음, 여러 서버의 로그를 한곳에서 모아보는 시스템을 활용할수 있음
+- log.error() 메서드에서 Exception 객체를 직접 넘기는 e.printStackTrace() 처럼 Exception 에 스택을 모두 남겨줌
+- **에러에 추적성을 높이기 위해서 e.toString() 이나 e.getMessage() 로 마지막 메세지만 남기기 보다는 전체 에러 스택을 다 넘기는 편이 좋음**
+
 ## 참고사이트
 - [Spring Handle Exception](https://jaehun2841.github.io/2018/08/30/2018-08-25-spring-mvc-handle-exception/#%EB%93%A4%EC%96%B4%EA%B0%80%EB%A9%B0)
+- [Exception 처리](https://www.slipp.net/questions/350)

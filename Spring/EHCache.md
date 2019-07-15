@@ -11,6 +11,7 @@
 
 속성
 - name : 코드에서 사용할 캐시 네임 필수로 있어야함
+- maxElementsInMemory : 최대 메모리 용량 
 - maxEntiresLocalHeap : 메모리에 생성 될 최대 캐시 갯수
 - maxEntiresLocalDisk : 디스크에 생성될 최대 캐시 갯수
 - etenral : 영속성 캐시 설정 true 이면 timeToIdleSecond, timeToLiveSecond
@@ -27,3 +28,4 @@
 
 ## 참고사이트
 - [EHCache 설정방법 (Spring Framework)](https://jaehun2841.github.io/2018/11/07/2018-11-04-ehcache-config-for-springframework/)
+- [ehcache 캐싱하기](https://softarchitecture.tistory.com/7)

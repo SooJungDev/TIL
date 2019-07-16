@@ -80,6 +80,21 @@ cd /etc/nginx/conf.d/
 cat 이름.conf | less
 ~~~
 
+## nginx 멈추가
+
+- 멈춘다.
+~~~
+sudo nginx -s stop
+~~~
+
+## nginx 시작
+
+- 시작한다
+~~~
+sudo nginx 
+~~~
+
+
 ## nginx 상태 확인하기
 ~~~
 service nginx status
@@ -188,5 +203,6 @@ sudo su
 ~~~
 crontab -l 
 ~~~
+
 
 

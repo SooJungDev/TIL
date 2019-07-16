@@ -49,6 +49,13 @@ sudo docker stop ngrinder_agent
 ~~~
 
 
+## agent 가 붙지 않는 문제가생김
+~~~
+./run_agent.sh -o
+~~~
+https://github.com/naver/ngrinder/issues/63
+
+
 ## 참고사이트
 - [nGrinder docker 설치 실행](https://code-factory.tistory.com/32)
 - [nGrinder 빨리 설치하기](https://multicloud.tistory.com/86)

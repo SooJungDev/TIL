@@ -50,10 +50,17 @@ sudo docker stop ngrinder_agent
 
 
 ## agent 가 붙지 않는 문제가생김
+- agent 가 설치된 폴더로 들어가서 
 ~~~
 ./run_agent.sh -o
 ~~~
 https://github.com/naver/ngrinder/issues/63
+
+
+## 그냥 실행하는 방법
+~~~
+java -XX:MaxPermSize=200m -jar ngrinder-controller-3.4.2.war --port 8080
+~~~
 
 
 ## 참고사이트

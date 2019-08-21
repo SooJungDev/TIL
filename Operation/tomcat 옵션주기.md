@@ -2,7 +2,7 @@
 - 나같은 경우에는 /bin/catailina.sh 에 설정되어있었음  
 - DrunMode 를 추가해준다. 아래처럼
 ~~~
-JAVA_OPTS="-d64 -server -Xms2048m -Xmx8192m -XX:PermSize=128m -XX:MaxPermSize=256m -DrunMode=stg"
+JAVA_OPTS="-d64 -server -Xms2048m -Xmx8192m -XX:PermSize=128m -XX:MaxPermSize=256m -DrunMode=옵션이름"
 ~~~
 
 - catalina.sh 파일에는 자바 옵션 설정 및 톰캣 로그 경로등 각종 설정을 저장할수있음 하지만 잘못 변경시 실수되어 문제 발생

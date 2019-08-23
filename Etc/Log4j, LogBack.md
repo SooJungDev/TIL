@@ -11,12 +11,10 @@
   - TRACE, DEBUG, INFO, WARM, ERROR , FETAL
 
 ### Log4j 구조
-
 - Logger(Category): Log4j 에서 지원하는 핵심클래스 , 로깅이 일어나는 부분을 그룹화해 필요한 그룹의 로그만을 출력하거나
 카테고리에 우선순위를 부여함으로써 여러가지 출력방법을 지원한다. 실제 로그 기능을 수행하는 역할 담당
 
-- Appender: 로그의 출력 위치를 지정한다. Appender로 설정 가능한 출력은 콘솔, 파일, OutputStream , java.io.Writer,
-Email(SMTP), Network 등이 있다.
+- Appender: 로그의 출력 위치를 지정한다. Appender로 설정 가능한 출력은 콘솔, 파일, OutputStream , java.io.Writer, Email(SMTP), Network 등이 있다.
  - ConsoleAppender : 콘솔에 로그 메세지를 출력
  - FileAppender: 파일에 로그 메시지를 출력
  - RollingFileAppender : 로그의 크기가 지정한 용량이상이되면 다른 이름의 파일을 출력
@@ -68,6 +66,7 @@ Email(SMTP), Network 등이 있다.
 - 심하게 생성되는 로그는 어플리케이션 성능에 영향을 미칠 수 있음
 - 개발중간에 로깅 코드를 추가하기 어려움
 
+
 ## LogBack
 - log4j를 토대로 새롭게 만든 Logging 라이브러리
 - slf4j 를 통해 연관 라이브러리들이 다른 logging framework 를 쓰더라도 logback 으로 통합
@@ -89,11 +88,37 @@ Logback에서 설정파일을 작성하는 방법은 2가지
 - 서버 중지 없이 I/O Failure 에 대한 복구 지원
 - RollingFileAppender 를 사용할 경우 자동적으로 오래된 로그를 지워주며 Rolling 백업을 처리한다.
 
+## logback.xml 설정 예제
+- RollingFileAppender
+    - 로그가 많아지면 파일 하나당 최대 용량 제한, 로그 파악하기 어려움
+    - 이때 대부분 날짜 기준으로 파일을 남김
+~~~
+  <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>mylog.txt</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- rollover daily -->
+      <fileNamePattern>mylog-%d{yyyy-MM-dd}.%i.txt</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+            class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- or whenever the file size reaches 100MB -->
+        <maxFileSize>100MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+    <encoder>
+      <pattern>%msg%n</pattern>
+    </encoder>
+  </appender>
+~~~
 
+- 확장자에 .zip 을 선언하면 새로운 file 이 생성될때 이전 파일은 .zip으로 압축 할 수 있음
+~~~
+<fileNamePattern>mylog-%d{yyyy-MM-dd}.%i.txt.zip</fileNamePattern>
+~~~
 
   
     
 
 ## 참고사이트
 - [Log4j 및 LogBack 정리](https://goddaehee.tistory.com/45)
+- [logback 설정 자세히 나옴](https://github.com/sonegy/how-to-use-logback)
 - [NDC & MDC ?](http://egloos.zum.com/charmpa/v/2543451)

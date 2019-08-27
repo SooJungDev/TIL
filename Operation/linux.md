@@ -204,5 +204,15 @@ sudo su
 crontab -l 
 ~~~
 
+## ip 확인
+- ip 확인하기
+~~~
+ifconfig
+~~~
+
+- 외부로 나가는 ip 확인하기
+~~~
+curl bot.whatismyipaddress.com
+~~~
 
 

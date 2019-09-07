@@ -26,10 +26,40 @@
 6. 본문은 영문 기준 72마다 줄 바꾸기
 7. 본문은 어떻게 보다 무엇을, 왜 에 맞춰 작성하기
 
-- 팁 추가 : merge commit 은 rebase 를 통해서 없애는 것이 좋다.
+**git rebase** 로 최신상태를 땡겨온다
+
+
+## merge 한다음에 꼬였을때 해결방법
+- 오픈소스에서는 머지해서 하지않는다 트리구조가 더러워질수있기때문에
+- 내가 작업한 내역이 밑으로 들어가버려서 문제가생김
+- 근데 나는이미...merge 해버림 ㅠㅠ
+
+- 원격에 뭐가있는지 확인
 ~~~
-git rebase --merge
+git remote -v 
 ~~~
+- 다시 같은 상태로 만들어준다 원격에있는 오픈소스 저장소와 같은 상태로 만들어줌
+~~~
+git reset --hard upstream/master
+~~~
+
+- 그다음 체리픽으로 해당 커밋메세지의 id 값을 넣어줘서 하나만때서 붙인다
+~~~
+git cherry-pick 커밋아이디값
+~~~
+
+- git log로 확인
+~~~
+git log
+~~~
+
+- 확인한다음에 강제로 푸시해준다!
+~~~
+git push -f 원격이름 브랜치이름
+~~~
+
+## rebase 와 merge 에 차이점
+- [git의 merge와 rebase 비교하기](https://blog.outsider.ne.kr/666)
 
 
 

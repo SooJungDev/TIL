@@ -124,6 +124,12 @@ sudo service 서비스명 start
 lsof -i :80
 ~~~
 
+## Linux 종류 버젼 확인
+~~~
+grep . /etc/*-release
+~~~
+
+- 참고사이트 [리눅스 종류 확인, 리눅스 버전 확인](https://zetawiki.com/wiki/%EB%A6%AC%EB%88%85%EC%8A%A4_%EC%A2%85%EB%A5%98_%ED%99%95%EC%9D%B8,_%EB%A6%AC%EB%88%85%EC%8A%A4_%EB%B2%84%EC%A0%84_%ED%99%95%EC%9D%B8)
 
 ## bind error address already in use 해결방법
 

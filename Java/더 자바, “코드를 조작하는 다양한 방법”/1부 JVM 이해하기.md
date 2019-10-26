@@ -5,7 +5,7 @@ JVM(Java Virtual Machine)
 - 자바 가상 머신으로 자바 바이트코드(.class 파일)를 OS에 특화된 코드로 변환(인터프리터와 JIT 컴파일러)하여 실행한다.
 - 바이트 코드를 실행하는 표준(JVM 자체는 표준)이자 구현체(특정 밴더가 구현한 JVM)이다.
 - [JVM 스펙](https://docs.oracle.com/javase/specs/jvms/se11/html/)
-- JVM 밴더: 오라클, 아마존, Azul, ...
+- JVM 밴더: 오라클, 아마존, Azul, ... (스펙에 맞춰서 구현한 구현체 다양함)
 - 특정 플랫폼에 종속적
 
 JRE(Java Runtime Environment): JVM + 라이브러리
@@ -22,11 +22,11 @@ JDK(Java Development Kit) : JRE + 개발 툴
 자바
 - 프로그래밍 언어
 - JDK에 들어있는 자바 컴파일러(javac)를 사용하여 바이트코드(.class 파일)로 컴파일 할 수있다.
-- 자바 유료화? 오라클에서 만든 Oracle JDK 11 버젼부터 상용으로 사용할때 유로
+- 자바 유료화? 오라클에서 만든 Oracle JDK 11 버젼부터 상용으로 사용할 때 유
     - https://medium.com/@javachampions/java-is-still-free-c02aef8c9e04
  
 JVM 언어
-- JVM 기반으로 동작하는 프로그래밍언어
+- JVM 기반으로 동작하는 프로그래밍 언어
 - 클로저, 그루비, JRuby, Jython, Kotlin, Scala,....
 
 참고
@@ -43,8 +43,8 @@ JVM 언어
 
 메모리
 - 메모리 영역에는 클래스 수준의 정보(클래스 이름, 부모클래스 이름, 메소드, 변수)저장. 공유 자원이다.
-- 힙 영역에는 객체를 저장, 공우 자원이다.
-- 스택영역에는 스레드마다 런타임 스택을 만들고, 그안에 메소드 호출을 스택프레임이라 부르는 블럭으로 쌓는다. 스레드를 종요라혐 런타임 스택도 사라진다.
+- 힙 영역에는 객체를 저장, 공유 자원이다.
+- 스택영역에는 스레드마다 런타임 스택을 만들고, 그안에 메소드 호출을 스택프레임이라 부르는 블럭으로 쌓는다. 스레드를 종료하면 런타임 스택도 사라진다.
 - PC(Program Counter) 레지스터: 스레드마다 스레드내 현재 실행할 스택 프레임을 가리키는 포인터가 생성된다.
 - 네이티브 메소드 스택
 - [Java JVM 런타임 메모리 영역의 유형](https://javapapers.com/core-java/java-jvm-run-time-data-areas/#Program_Counter_PC_Register)
@@ -57,7 +57,7 @@ JVM 언어
  
  JNI(Java Native Interface)
  - 자바 애플리케이션에서 C,C++, 어셈블리로 작성된 함수를 사용 할 수 있는 방법을 제공
- - Native 키워드를 사용한 메소드 호출
+ - native 키워드를 사용한 메소드 호출
  - [Java 및 Scala의 간단한 JNI (Java Native Interface) 예제](https://medium.com/@bschlining/a-simple-java-native-interface-jni-example-in-java-and-scala-68fdafe76f5f)
  
  네이티브 메소드 라이브러리
@@ -77,9 +77,9 @@ JVM 언어
         - FQCN
         - 클래스 | 인터페이스| 이늄
         - 메소드와 변수
-    - 로딩이 끝나면 해당 클래스 타입의 class 객체를 생성하여 힙 영역에 저장
+    - 로딩이 끝나면 해당 클래스 타입의 class 객체를 생성하여 **힙 영역에 저장**
  - 링크
-    - Verify, Prepare, Reolve(optional) 세단계로 나눠져있다.
+    - Verify, Prepare, Resolve(optional) 세단계로 나눠져있다.
     - 검증 : .class 파일 형식이 유효한지 체크한다
     - Preparation: 클래스 변수(static 변수)와 기본값에 필요한 메모리
     - Resolve : 심볼릭 메모리 레퍼런스를 메소드 영역에 있는 실제 레퍼런스로 교체한다.

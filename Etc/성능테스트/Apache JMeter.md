@@ -7,7 +7,7 @@
 - ./jmeter.sh 실행
  
 - JMeter 를 실행하면 기본적으로 TEST plan 이 있음
-- Test Plan 에 추가해야 할 것은 Thread Group 입니다.
+- Test Plan 에 추가해야 할 것은 Thread Group 
   - JMeter 테스트는 쓰레드를 생성하여 요청을 하게 되는데, Thread Group은 쓰레드 생성 규칙에 대한 정의를 하는 공간이며, 여러 테스트에 대한 그룹 단위
 
 Thread Group을 생성하고 스레드 생성 규칙을 추가
@@ -40,8 +40,18 @@ Thread Group을 생성하고 스레드 생성 규칙을 추가
 
 ## 응답 결과 데이터 조회
 - 요청에 대한 응답 결과를 분석을 하기 위해 여러가지 결과 데이터가 필요함
-- 무엇을 테스트  것이냐 따라 추가하는 Listner 가 다름
+- 무엇을 테스트  것이냐 따라 추가하는 Listener 가 다름
 
+Listener 를 추가하는 방법
+- ThreadGroup -> add -> Listener ->  선택
+
+1. View Results Tree : Request, Response data 등 요청에 대한 정보
+2. Summary Report : 요청 결과를 파일로 저장 할 수 있음. 하단의 Save Table Data 버튼 클릭하면 됨, 데이터를 바탕으로 엑셀에서 그래프를 그릴 수 있음
+3. Response Time Graph : 응답 시간 결과를 그래프로 볼 수 있음 ,settings 에서 x축 간격 좁힐 수 있음
+
+## 테스트
+- 상단에 start 버튼 누르면 Thread 생성되면서 요청하게됨
+- 주의할 점은 start 하기전에 빗자루 버튼 클릭 이전 테스트 내용을 모두 지운후에 테스트
  
 
  

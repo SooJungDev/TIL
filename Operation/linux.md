@@ -6,6 +6,19 @@
 ifconfig -a | res
 ~~~
 
+## netstat  네트워크 상태 확인 방법
+- 네트워크 접속, 라우팅 테이블, 네트워크 인터페이스의 통계 정보를 보여주는 명령
+~~~
+netstat -nap 
+netstat -an | grep 포트번호 
+netstat -nlpt
+netstat -nap | grep LISTEN
+~~~
+- netstat -nap : 연결을 기다리는 목록과 프로그램을 보여준다
+- netstat -an | grep 포트번호 : 특정 포트가 사용 중에 있는지 확인 
+- netstat -nlpt : TCP listening 상태의 포트와 프로그램을 보여준다
+- netstat -nap | grep LISTEN : 연결을 기다리는 목록과 프로그램을 보여주는데 LISTEN 상태만 보여준다.
+
 ## grep 으로 로그확인
 ~~~
 tail -n1000 | grep -i "keyword" catalina.out

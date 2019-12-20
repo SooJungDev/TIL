@@ -1,10 +1,23 @@
 ## 멀티아이피 목록 확인하는 방법
-
 - 아래의 명령어를 치면 해당 서버에 멀티아이피를 확인할수있음 
 - 나올떄는 ctrl+c 로 나온다.
 ~~~
 ifconfig -a | res
 ~~~
+## 리눅스 프로세스 관계 확인
+- pstree 명령어는 실행되고 있는 프로세스의 상관관계를 트리 형태로 출력 해주는 명령어로써 
+관계를 트리 형태로 출력해주므로 계층관계를 한 눈에 파악 할 수 있다.
+~~~
+pstree
+~~~
+옵션들
+- -a : 명령행에서 지정한 인수가 있다면 명령어 라인 인수까지 보여준다
+- -c : 기본값은 동일한 트리 내의 같은 프로세스를 하나의 프로세스만 보여주고 해당 프로세시의 개수를 나타내는데, 같은 프로세스를
+      모두 보여준다
+- -G : 트리형태를 보기 좋게 VT100 형태로 보여준다
+- -h : 현재 프로세스와 부모 프로세스를 하이라이트로 보여준다
+- -H pid : pid로 지정된 프로세스와 부모 프로세스를 하이라이트로 보여준다
+- -l : 긴라인을 모두 보여준다
 
 ## netstat  네트워크 상태 확인 방법
 - 네트워크 접속, 라우팅 테이블, 네트워크 인터페이스의 통계 정보를 보여주는 명령
@@ -30,6 +43,21 @@ tail -n1000 | grep -i "keyword" catalina.out
 grep -A100 -B100 "keyword" catalina.out
 ~~~
 - 해당 키워드에 뒤로 100줄 앞으로 100줄 찾을수있음
+
+## Logstash 에러로그 확인 및 재시작
+- 경로 위치
+~~~
+/var/log/logstash-forwarder
+~~~
+- 에러로그 확인
+~~~
+tail -1000f logstash-forwarder.err 
+~~~
+- 종료 및 재시작
+~~~
+service logstash-forwarder stop
+service logstash-forwarder start
+~~~
 
 ## 톰캣
 - 톰캣 프로세스 확인
@@ -59,7 +87,11 @@ kill -9 해당pid
 ~~~
 tail -f 로그파일이름
 ~~~
-
+## 서비스 목록 확인하기
+- --status-all: 모든 서비스의 상태를 출력한다. 이 옵션은 모든 서비스를 대상으로 하므로 서비스명을 주지 않아도 된다.
+~~~
+service --status-all
+~~~
 
 ## Nginx 로그확인하기
 
@@ -252,4 +284,66 @@ nohub command 1>/dev/null 2>&1&
 - 참고사이트
  - [nohup 을 이용한 백그라운드 작업](https://ourcstory.tistory.com/197)
 
+## 노후화 된 장리 교체로 인한 서버 재시작 시 팁
+1. 해당 서버에 어떤 서비스들이 떠있는지 확인한다
+확인 할 때는 아래와 같은 명령어로 확인
+~~~
+ps -ef | grep java
 
+pstree
+
+service --status-all
+
+netstat -nap | grep LISTEN
+~~~
+2.실행할 서버가 많다면 실행 할 명령어들을 모아 실행파일로 만든다
+- 종료를 한꺼번에 할 파일
+- 시작을 한꺼번에 할 파일
+
+~~~
+vi shutdown-all.sh 
+vi start-all.sh 
+chmod +x shutdown-all.sh 
+chmod +x start-all.sh 
+~~~
+
+- shutdown-all.sh 
+~~~
+sudo service nginx stop
+톰캣경로1/bin/shutdown.sh
+톰캣경로1/bin/shutdown.sh
+톰캣경로1/bin/shutdown.sh
+sudo service 서비스명 stop
+sudo service 서비스명 stop
+~~~
+
+- start-all.sh 
+~~~
+톰캣경로1/bin/startup.sh
+톰캣경로1/bin/startup.sh
+톰캣경로1/bin/startup.sh
+sudo service 서비스명 start
+sudo service 서비스명 start
+~~~
+
+3.잘 실행 되었는지 확인
+~~~
+ps -ef | grep java
+~~~
+
+4.톰캣이나 서비스가 뜨는 시간이 있으므로 nginx start는 수동으로 진행함 
+~~~
+sudo service nginx start
+~~~
+
+5. nginx 잘 실행 됬는지 확인
+~~~
+service nginx status 
+~~~
+
+6.nginx 로그가 있는 경로로 가서 파일보고 확인
+~~~
+cd /var/log/nginx
+ls -al
+tail -f /var/log/nginx/access.log
+~~~

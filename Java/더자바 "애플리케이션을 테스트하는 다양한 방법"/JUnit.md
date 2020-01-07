@@ -45,3 +45,77 @@
 참고: 
 - [Display Names](https://junit.org/junit5/docs/current/user-guide/#writing-tests-display-names)
 
+## JUnit5: Assertion
+org.junit.jupiter.api.Assertionss.*
+
+- 실제값이 기대한 값과 같은지 확인 : assertEquals(expected, actual)
+- 값이 null이 아닌지 확인 : assertNotNull(actual)
+- 다음 조건이 참(true)인지 확인 : assertTrue(boolean)
+- 모든 확인 구문 확인 : assertAll(executables...)
+- 예외 발생 확인 : assertThrows(expectedType, executable)
+- 특정 시간안에 실행이 완료되는지 확인 : assertTimeout(duration, executable)
+
+마지막 매개변수로 Supplier<String> 타입의 인스턴스를 람다 형태로 제공 할 수 있다.
+- 복잡한 메세지 생성 해야 하는 경우 사용하면 실패한 경우에만 해당 메시지를 만들게 할 수 있다.
+
+ [AssertJ](https://joel-costigliola.github.io/assertj/),  [Hamcrest](https://hamcrest.org/JavaHamcrest/),[Truth](https://truth.dev/)
+등의 라이브러리를 사용 할 수 도있다.
+
+## JUnit5: 조건에 따라 테스트 실행하기
+특정한 조건을 만족하는 경우에 테스트를 실행 하는 방법
+
+org.junit.jupiter.api.Assumptions.*
+- assumeTrue(조건)
+- assumingThat(조건,테스트)
+
+@Enabled ___ 와 @Disabled___
+- OnOS
+- OnJre
+- IfSystemProperty
+- IfEnvironmentVariable
+- If
+
+## JUnit5: 태깅과 필터링
+테스트 그룹을 만들고 원하는 테스트 그룹만 테스트를 실행 할 수 있는 기능
+@Tag
+- 테스트 메소드에 태그를 추가 할 수 있다.
+- 하나의 테스트 메소드에 여러 태그를 사용 할 수 있다.
+
+인텔리제이에서 특정 태그로 테스트 필터링 하는 방법
+
+메이븐에서 테스트 필터링 하는방법
+~~~
+<plugin> 
+    <artifactId>maven-surefire-plugin</artifactId>
+     <configuration>
+        <groups>fast | slow</groups>
+     </configuration>
+</plugin>
+~~~
+- [Introduction to Build Profiles](https://maven.apache.org/guides/introduction/introduction-to-profiles.html)
+- [Tag Expressions](https://junit.org/junit5/docs/current/user-guide/#running-tests-tag-expressions)
+
+## JUnit5:커스텀 태그
+JUnit5 애노테이션을 조합하여 커스텀 태그를 만들 수 있다.
+
+FastTest.java
+~~~java
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Tag("fast")
+@Test
+public @interface FastTest{
+
+}
+~~~
+
+~~~java
+@FastTest
+@DisplayName("스터디 만들기 fast")
+void create_new_study(){
+
+
+@SlowTest
+@DisplayName("스터디 만들기 slow")
+void create_new_study_again(){
+~~~

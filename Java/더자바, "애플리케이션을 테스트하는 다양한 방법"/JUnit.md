@@ -119,3 +119,44 @@ void create_new_study(){
 @DisplayName("스터디 만들기 slow")
 void create_new_study_again(){
 ~~~
+
+## JUnit5: 테스트 반복하기 1부
+@RepeatedTest
+- 반복 횟수와 반복 테스트 이름을 설정 할 수 있다.
+    - {displayName}
+    - {currentRepetition}
+    - {totalRepetitions}
+- RepetitionInfo 타입의 인자를 받을 수 있다.
+
+@ParameterizedTest
+- 테스트에 여러 다른 매개변수를 대입해가며 반복 실행한다.
+    - {displayName}
+    - {index}
+    - {arguments}
+    - {0},{1},...
+    
+## JUnit5: 테스트 반복하기 2부
+인자 값들의 소스
+- @ValueSource
+- @NullSource, @EmptySource, @NullAndEmptySource
+- @EnumSource
+- @MethodSource
+- @CvsSource
+- @CvsFileSource
+- @ArgumentSource
+
+인자값 타입 변환
+- 암묵적인 타입 변환
+ - [레퍼런스 참고](https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests-argument-conversion-implicit)
+- 명시적 타입 변환
+    - SimpleArgumentConverter 상속 받은 구현체 제공
+    - @ConvertWith
+    
+인자값 조합
+- ArgumentsAccessor
+- 커스텀 Accessor
+    - ArgumentsAggregator 인터페이스 구현
+    - @AggregateWith
+
+참고
+- [Parameterized Tests](https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests)

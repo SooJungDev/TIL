@@ -13,7 +13,7 @@
 참고:
 - [JUnit 5 User Guide](https://junit.org/junit5/docs/current/user-guide/)
 
-## JUnit5: 시작하기
+## 1.JUnit5: 시작하기
 스프링 부트 프로젝트 만들기
 - 2.2+ 버전의 스프링 부트 프로젝트를 만든다면 기본으로 JUnit5 의존성 추가됨
 
@@ -160,3 +160,43 @@ void create_new_study_again(){
 
 참고
 - [Parameterized Tests](https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests)
+
+## JUnit5 : 테스트 인스턴스
+JUnit 은 테스트 메소드마다 테스트 인스턴스룰 새로만든다
+- 이것이 기본 전략
+- 테스트 메소드를 독립적으로 실행하여 예상치 못한 부작용을 방지하기 위함이다.
+- 이 전략을 JUnit5 에서 변경 할 수 있다
+
+@TestInstance(Lifecycle.PER_CLASS)
+- 테스트 클래스당 인스턴스를 하나만 만들어 사용한다
+- 경우에 따라 테스트 간에 공유하는 모든 상태를 @BeforeEach 또는 @AfterEach에서 초기화 할 필요가 있다
+- @BeforeAll 과 AfterAll 을 인스턴스 메소드 또는 인터페이스에 정의한 default 메소드로 정의할 수도 있다.
+
+## JUnit5: 테스트 순서
+실행할 테스트 메소드 특정한 순서에 의해 실행되지만 어떻게 그 순서를 정하는지 의도적으로 분명히 하지 않는다.
+(테스트 인스턴스를 테스트 마다 새로 만드는 것과 같은 이유)
+
+경우에 따라, 특정 순서대로 테스트를 실행하고 싶을 때도 있다.
+그 경우에는 테스트 메소드를 원하는 순서에 따라 실행하도록 @Testinstance(Lifecycle.PER_CLASS)와 함께
+@TestMethodOrder 를 사용 할 수 있다.
+- MethodOrderer 구현체를 설정한다.
+- 기본 구현체
+    - Alphanumeric
+    - OrderAnnotation
+    - Random
+    
+## JUnit5: junit-platform.properties
+JUnit 설정 파일로, 클래스패스 루트 (src/test/resources/)에 넣어두면 적용된다.
+
+테스트 인스턴스 라이프사이클 설정
+junit.jupiter.testinstance.lifecycle.default = per_class
+
+확장팩 자동 감지 기능 
+junit,jupiter.extensions.autodetection.enabled = true
+
+@Disabled 무시하고 실행하기
+junit.jupiter.conditions.deactivate = org.junit.*DisabledCondition
+
+테스트 이름 표기 전략 설정
+junit.jupiter.displayname.generator.default = \ 
+org.junit.jupiter.api.DisplayNameGenerator$ReplaceUnderscores

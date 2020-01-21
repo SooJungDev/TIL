@@ -66,6 +66,45 @@ class StudyServiceTest {
 @ExtendWith(MockitoExtension.class)
 class StudyServiceTest {
 
-}
+   @Test
+   void createStudyService(@Mock MemberServide memberService, @Mock StudyRepository studyRepository) {
+        StudyService studyService = new StudyService(memberService, studyRepository);
+        assertNotNull(studyServide);
+   }
 
+}
 ~~~
+
+## Mock 객체 Stubbing
+모든 Mock 객체의 행동
+- Null을 리턴한다. (Optional 타입은 Optional.empty 리턴)
+- Primitive 타입은 기본 Primitive 값
+- 콜렉션은 비어있는 콜렉션.
+- Void 메소드는 예외를 던지지 않고 아무런 일도 발생하지 않는다.
+
+Mock 객체를 조작해서
+- 특정한 매개변수를 받은 경우 특정한 값을 리턴하거나 예외를 던지도록 만들 수 있다
+    - [How about some stubbing?](https://javadoc.io/doc/org.mockito/mockito-core/3.2.4/index.html)
+    - [Argument matchers](https://javadoc.io/doc/org.mockito/mockito-core/latest/index.html)
+- Void 메소드 특정 매개변수를 받거나 호출된 경우 예외를 발생 시킬 수 있다.
+    - [Stubbing void method with exceptions](https://javadoc.io/doc/org.mockito/mockito-core/latest/index.html)
+- 메소드가 동일한 매개변수로 여러번 호출 될 떄 각기 다르게 행동하도록 조작 할 수도 있다
+    - [Stubbing consecutive calls]()
+
+## Mock 객체 Stubbing 연습문제
+다음 코드의 //TODO에 해당하는 작업을 코딩으로 채워 넣으세요.
+~~~java
+Study study = new Study(10, "테스트");
+
+// TODO memberService 객체에 findById 메소드를 1L 값으로 호출하면 
+Optional.of(member) 객체를 리턴하도록 Stubbing
+// TODO studyRepository 객체에 save 메소드를 study 객체로 호출하면 study 객체 
+그대로 리턴하도록 Stubbing
+
+studyService.createNewStudy(1L, study);
+
+assertNotNull(study.getOwner()); 
+assertEquals(member, study.getOwner());
+~~~
+
+

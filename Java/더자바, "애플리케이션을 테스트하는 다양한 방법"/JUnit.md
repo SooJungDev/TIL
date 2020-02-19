@@ -122,7 +122,21 @@ class StudyTest {
 - [Display Names](https://junit.org/junit5/docs/current/user-guide/#writing-tests-display-names)
 
 ## JUnit5: Assertion
-org.junit.jupiter.api.Assertionss.*
+org.junit.jupiter.api.Assertions.*
+
+~~~java
+IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                                                  () -> new Study(-10));
+String message = exception.getMessage();
+assertEquals("limit 은 0보다 커야 한다.", message);
+Study study = new Study(-10);
+assertAll(
+        () -> assertNotNull(study),
+        () -> assertEquals(StudyStatus.DRAFT, study.getStatus(),
+                           () -> "스터디를 처음 만들면" + StudyStatus.DRAFT + "상태다"),
+        () -> assertTrue(study.getLimit() > 0, "스터디 최대 참석 가능 인원은 0보다 커야 한다.")
+);
+~~~
 
 - 실제값이 기대한 값과 같은지 확인 : assertEquals(expected, actual)
 - 값이 null이 아닌지 확인 : assertNotNull(actual)
@@ -132,10 +146,24 @@ org.junit.jupiter.api.Assertionss.*
 - 특정 시간안에 실행이 완료되는지 확인 : assertTimeout(duration, executable)
 
 마지막 매개변수로 Supplier<String> 타입의 인스턴스를 람다 형태로 제공 할 수 있다.
-- 복잡한 메세지 생성 해야 하는 경우 사용하면 실패한 경우에만 해당 메시지를 만들게 할 수 있다.
+~~~java
+ assertEquals(StudyStatus.DRAFT, study.getStatus(), () -> "스터디를 처음 만들면"+ StudyStatus.DRAFT +"상태다");
+~~~
+- **복잡한 메세지 생성 해야 하는 경우 사용하면 실패한 경우에만 해당 메시지를 만들게 할 수 있다.**
 
- [AssertJ](https://joel-costigliola.github.io/assertj/),  [Hamcrest](https://hamcrest.org/JavaHamcrest/),[Truth](https://truth.dev/)
+- assertTimeoutPreemptively 주의해서 사용해야됨
+    - ThreadLocal 때문에
+~~~java
+       assertTimeoutPreemptively(Duration.ofMillis(100), () -> {
+            new Study(10);
+            Thread.sleep(300);
+        });
+        // TODO ThreadLocal
+~~~
+
+ [AssertJ](https://joel-costigliola.github.io/assertj/),[Hamcrest](https://hamcrest.org/JavaHamcrest/),[Truth](https://truth.dev/)
 등의 라이브러리를 사용 할 수 도있다.
+- AssertJ, Hamcrest 정도는 알아두면 좋음
 
 ## JUnit5: 조건에 따라 테스트 실행하기
 특정한 조건을 만족하는 경우에 테스트를 실행 하는 방법

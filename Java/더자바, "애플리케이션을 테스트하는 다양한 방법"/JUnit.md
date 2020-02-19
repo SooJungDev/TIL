@@ -5,19 +5,22 @@
     - 단위 테스트를 작성하는 자바 개발자 93% JUnit 을 사용함.
 - 자바 8이상을 필요로함
 - 대체제: TestNG,Spock...
+- JUnit5 나온지 꽤됨 스프링부트 2.2+기본 JUnit5를 올림
 
+세부모듈
 - Platform: 테스트를 실행해주는 런처 제공. TestEngine API 제공
-- Jupiter: TestEngine API 구현체로 JUnit5를 제공
+- Jupiter: TestEngine API 구현체로 JUnit5를 제공 (주로 이쪽을 학습하게 됨)
 - Vintage: JUnit4와 3을 지원하는 TestEngine 구현체
 
 참고:
 - [JUnit 5 User Guide](https://junit.org/junit5/docs/current/user-guide/)
 
-## 1.JUnit5: 시작하기
+## JUnit5 시작하기
 스프링 부트 프로젝트 만들기
 - 2.2+ 버전의 스프링 부트 프로젝트를 만든다면 기본으로 JUnit5 의존성 추가됨
 
 스프링부트 프로젝트 사용하지 않는다면?
+아래 의존성만 추가해주면 됨
 ~~~
 <dependency> 
      <groupId>org.junit.jupiter</groupId>
@@ -27,13 +30,86 @@
 </dependency>
 ~~~
 
+메소드가 퍼블릭이 아니더라도 실행된다
+
+~~~java
+class StudyTest {
+
+    @Test
+    void create(){
+        Study study = new Study();
+        assertNotNull(study);
+        System.out.println("create");
+    }
+
+    @Test
+    void create1(){
+        System.out.println("create1");
+    }
+
+    @BeforeAll
+    static void beforeAll(){
+        System.out.println("before all");
+    }
+
+    @AfterAll
+    static void afterAll(){
+        System.out.println("after all");
+    }
+
+    @BeforeEach
+    void beforeEach(){
+        System.out.println("before each");
+    }
+
+    @AfterEach
+    void afterEach(){
+        System.out.println("After each");
+    }
+}
+~~~
+
+실행결과
+~~~
+before all
+
+before each
+create
+After each
+
+before each
+create1
+After each
+
+after all
+~~~
+
 기본 애노테이션
 - @Test
 - @BeforeAll / @AfterAll
 - @BeforeEach / @AfterEach
-- @Disabled
+- @Disabled : 테스트가 꺠졌을떄 무시하고 실행 깨졌을떄 제일 베스트는 고치는게 좋음 근데 부득이하게 실행할 경우에 해당 어노테이션 사용
 
 ## JUnit5: 테스트 이름 표시하기
+~~~java
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+class StudyTest {
+
+    @Test
+    @DisplayName("스터디 만들기 \uD83D\uDE2D")
+    void create_new_study(){
+        Study study = new Study();
+        assertNotNull(study);
+        System.out.println("create");
+    }
+
+    @Test
+    @DisplayName("스터디 만들기 \uD83D\uDC4D\uD83D\uDE2D")
+    void create_new_study_again(){
+        System.out.println("create1");
+    }
+
+~~~
 @DisplayNameGeneration
 - Method 와 Class 레퍼런스를 사용해서 테스트 이름을 표기하는 방법 설정
 - 기본 구현체로 ReplaceUnderscores 제공

@@ -108,3 +108,13 @@ assertEquals(member, study.getOwner());
 ~~~
 
 
+Mock 객체가 어떻게 사용이 됐는지 확인할 수 있다.
+- 특정 메소드가 특정 매개변수로 몇번 호출 되었는지, 최소 한번은 호출 됐는지, 전혀
+호출되지 않았는지
+    - Verifying exact number of invocations
+- 어떤 순서대로 호출했는지
+    - Verification in order
+- 특정 시간 이내에 호출됐는지
+    - Verification with timeout
+- 특정 시점 이후에 아무 일도 벌어지지 않았는지
+    - Finding redundant invocations

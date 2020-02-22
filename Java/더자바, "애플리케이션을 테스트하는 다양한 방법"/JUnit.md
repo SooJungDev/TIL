@@ -167,17 +167,57 @@ assertAll(
 
 ## JUnit5: 조건에 따라 테스트 실행하기
 특정한 조건을 만족하는 경우에 테스트를 실행 하는 방법
+~~~java
+    @Test
+    @DisplayName("스터디 만들기 \uD83D\uDE2D")
+    void create_new_study() {
+        String test_env = System.getenv("TEST_ENV");
 
+        assumingThat("LOCAL".equalsIgnoreCase(test_env), ()->{
+            System.out.println("local");
+            Study actual = new Study(100);
+            assertThat(actual.getLimit()).isGreaterThan(0);
+        });
+
+
+        assumingThat("soojung".equalsIgnoreCase(test_env), ()->{
+            System.out.println("soojung");
+            Study actual = new Study(10);
+            assertThat(actual.getLimit()).isGreaterThan(0);
+        });
+
+    }
+~~~
 org.junit.jupiter.api.Assumptions.*
 - assumeTrue(조건)
 - assumingThat(조건,테스트)
 
+
+~~~java
+    @Test
+    @DisplayName("스터디 만들기 \uD83D\uDE2D")
+    @EnabledOnOs({ OS.MAC, OS.LINUX})
+    void create_new_study() {
+        String test_env = System.getenv("TEST_ENV");
+        System.out.println("local");
+        Study actual = new Study(100);
+        assertThat(actual.getLimit()).isGreaterThan(0);
+    }
+
+    @Test
+    @DisplayName("스터디 만들기 \uD83D\uDC4D\uD83D\uDE2D")
+    @DisabledOnOs({ OS.MAC})
+    void create_new_study_again() {
+        System.out.println("create1");
+    }
+
+~~~
 @Enabled ___ 와 @Disabled___
 - OnOS
 - OnJre
 - IfSystemProperty
 - IfEnvironmentVariable
-- If
+- If (현재 지원하지않음)
 
 ## JUnit5: 태깅과 필터링
 테스트 그룹을 만들고 원하는 테스트 그룹만 테스트를 실행 할 수 있는 기능
@@ -204,13 +244,13 @@ JUnit5 애노테이션을 조합하여 커스텀 태그를 만들 수 있다.
 
 FastTest.java
 ~~~java
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Tag("fast")
 @Test
-public @interface FastTest{
-
+@Tag("fast")
+public @interface FastTest {
 }
+
 ~~~
 
 ~~~java
@@ -225,6 +265,21 @@ void create_new_study_again(){
 ~~~
 
 ## JUnit5: 테스트 반복하기 1부
+~~~java
+    @DisplayName("스터디 만들기")
+    @RepeatedTest(value = 10, name ="{displayName}, {currentRepetition}/{totalRepetitions}" )
+    void repeatTest(RepetitionInfo repetitionInfo){
+        System.out.println("test"+repetitionInfo.getCurrentRepetition()+"/"+repetitionInfo.getTotalRepetitions());
+    }
+
+    @DisplayName("스터디 만들기")
+    @ParameterizedTest(name = "{index} {displayName} message={0}")
+    @ValueSource(strings = {"날씨가","많이","추워지고","있네요."})
+    void parameterizedTest(String message){
+        System.out.println(message);
+    }
+
+~~~
 @RepeatedTest
 - 반복 횟수와 반복 테스트 이름을 설정 할 수 있다.
     - {displayName}
@@ -261,6 +316,33 @@ void create_new_study_again(){
 - 커스텀 Accessor
     - ArgumentsAggregator 인터페이스 구현
     - @AggregateWith
+    
+~~~java
+    @DisplayName("스터디 만들기")
+    @ParameterizedTest(name = "{index} {displayName}")
+    @CsvSource({"10, '자바 스터디'","20, 스프링"})
+    void parameterizedTest(@AggregateWith(StudyAggregator.class) Study study) {
+        System.out.println(study);
+    }
+
+    static class StudyAggregator implements ArgumentsAggregator {
+
+        @Override
+        public Object aggregateArguments(ArgumentsAccessor argumentsAccessor, ParameterContext parameterContext)
+                throws ArgumentsAggregationException {
+            return new Study(argumentsAccessor.getInteger(0), argumentsAccessor.getString(1));
+        }
+    }
+
+    static class StudyConverter extends SimpleArgumentConverter{
+
+        @Override
+        protected Object convert(Object source, Class<?> targetType) throws ArgumentConversionException {
+            assertEquals(Study.class,targetType, "Can only convert to Study");
+            return new Study(Integer.parseInt(source.toString()));
+        }
+    }
+~~~
 
 참고
 - [Parameterized Tests](https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests)

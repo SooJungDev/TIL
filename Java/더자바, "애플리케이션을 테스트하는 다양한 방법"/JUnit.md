@@ -544,8 +544,9 @@ void create_new_study() {
 }
 ~~~
 
-5.다음은 JUnit5 가 제공하는 애노테이션으로 컴포짓 애노테이션을 만드는 코드입니다. 이 애노테이션의 적절한 Rention 전략은 무엇인가요?
+5.다음은 JUnit5 가 제공하는 애노테이션으로 컴포짓 애노테이션을 만드는 코드입니다. 이 애노테이션의 적절한 Retention 전략은 무엇인가요?
 답:RetentionPolicy.RUNTIME
+**테스트가 실행하는 시점에 애노테이션에 대한 정보가 남아있어야됨!!! 그러므로 RUNTIME**
 ~~~java
 @Target(ElementType.METHOD)
 @Retention(____________)
@@ -557,10 +558,13 @@ public @interfase FastTest{
 
 6.다음중 JUnit5가 제공하는 확장팩 등록 방법이 아닌 것은?
 답:2번 @Rule
-1.@ExtendWith
+1.@ExtendWith 
+    - 선언적 등록
 2.@Rule
 3.@RegisterExtension
+    - 해당하는 extension을 만들어서 코드로 등록
 4.ServiceLoader
+    - 자동으로 등록 
 
 7.다음 코드는 유즈케이스 테스트를 작성한 것입니다. 다음 빈칸에 적절한 코드는?
 답 PER_CLASS , OrderAnnotation

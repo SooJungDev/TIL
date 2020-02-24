@@ -348,28 +348,58 @@ void create_new_study_again(){
 - [Parameterized Tests](https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests)
 
 ## JUnit5 : 테스트 인스턴스
-JUnit 은 테스트 메소드마다 테스트 인스턴스룰 새로만든다
+JUnit 은 **테스트 메소드마다 테스트 인스턴스룰 새로만든다**
 - 이것이 기본 전략
-- 테스트 메소드를 독립적으로 실행하여 예상치 못한 부작용을 방지하기 위함이다.
+- 테스트 메소드를 **독립적으로 실행하여 예상치 못한 부작용을 방지하기 위함이다.**
 - 이 전략을 JUnit5 에서 변경 할 수 있다
 
-@TestInstance(Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 - 테스트 클래스당 인스턴스를 하나만 만들어 사용한다
 - 경우에 따라 테스트 간에 공유하는 모든 상태를 @BeforeEach 또는 @AfterEach에서 초기화 할 필요가 있다
 - @BeforeAll 과 AfterAll 을 인스턴스 메소드 또는 인터페이스에 정의한 default 메소드로 정의할 수도 있다.
+    - static 이 아니여도 된다.
 
 ## JUnit5: 테스트 순서
 실행할 테스트 메소드 특정한 순서에 의해 실행되지만 어떻게 그 순서를 정하는지 의도적으로 분명히 하지 않는다.
 (테스트 인스턴스를 테스트 마다 새로 만드는 것과 같은 이유)
 
 경우에 따라, 특정 순서대로 테스트를 실행하고 싶을 때도 있다.
-그 경우에는 테스트 메소드를 원하는 순서에 따라 실행하도록 @Testinstance(Lifecycle.PER_CLASS)와 함께
+그 경우에는 테스트 메소드를 원하는 순서에 따라 실행하도록 @TestInstance(TestInstance.Lifecycle.PER_CLASS)와 함께
 @TestMethodOrder 를 사용 할 수 있다.
 - MethodOrderer 구현체를 설정한다.
 - 기본 구현체
     - Alphanumeric
-    - OrderAnnotation
+    - OrderAnnotation 
     - Random
+
+순서를 주고싶다면 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    - 시나리오 테스트를 만들 떄 이용 할 수 있음
+@Order 로 순서를 줄 수 있음
+~~~java
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+class StudyTest {
+
+    int value = 1;
+
+    @Order(2)
+    @FastTest
+    @DisplayName("스터디 만들기 fast")
+    void create_new_study() {
+        System.out.println(this);
+        Study actual = new Study(value++);
+        assertThat(actual.getLimit()).isGreaterThan(0);
+    }
+
+    @Order(1)
+    @SlowTest
+    @DisplayName("스터디 만들기 slow")
+    void create_new_study_again() {
+        System.out.println(this);
+        System.out.println("create1 " + value++);
+    }
+~~~    
     
 ## JUnit5: junit-platform.properties
 JUnit 설정 파일로, 클래스패스 루트 (src/test/resources/)에 넣어두면 적용된다.
@@ -393,23 +423,79 @@ JUnit5의 확장모델은 단 하나 , Extension
 
 확장팩 등록 방법
 - 선언적인 등록 @ExtendWith
+~~~java
+@ExtendWith(FindSlowTestExtenstion.class)
+~~~
 - 프로그래밍 등록 @RegisterExtension
+~~~java
+    @RegisterExtension
+    static  FindSlowTestExtenstion findSlowTestExtenstion = new FindSlowTestExtenstion(1000L);
+~~~
 - 자동 등록 자바 ServiceLoader 이용
 
 확장팩 만드는 방법
 - 테스트 실행 조건
 - 테스트 인스턴스 팩토리
-- 테스트 인스턴스 후 - 처리ㅈ기
+- 테스트 인스턴스 후-처리기
 - 테스트 매개변수 리졸버
 - 테스트 라이프사이클 콜백
 - 예외처리
 - ...
+~~~java
+package me.crystal.inflearnthejavatest;
 
+import java.lang.reflect.Method;
+
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
+
+public class FindSlowTestExtenstion implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
+
+    private long THRESHOLD;
+
+    public FindSlowTestExtenstion(long THRESHOLD) {
+        this.THRESHOLD = THRESHOLD;
+    }
+
+    @Override
+    public void beforeTestExecution(ExtensionContext context) throws Exception {
+        Store store = getStore(context);
+        store.put("START_TIME", System.currentTimeMillis());
+
+    }
+
+    @Override
+    public void afterTestExecution(ExtensionContext context) throws Exception {
+        Method requiredTestMethod = context.getRequiredTestMethod();
+        SlowTest annotation = requiredTestMethod.getAnnotation(SlowTest.class);
+
+        String testMethodName = context.getRequiredTestMethod().getName();
+        Store store = getStore(context);
+        Long start_time = store.remove("START_TIME", long.class);
+        long duration = System.currentTimeMillis() - start_time;
+        if (duration > THRESHOLD && annotation == null) {
+            System.out.printf("Please considoer mark method [%s] with @SlowTest. \n", testMethodName);
+        }
+
+    }
+
+    private Store getStore(ExtensionContext context) {
+        String testClassName = context.getRequiredTestClass().getName();
+        String testMethodName = context.getRequiredTestMethod().getName();
+        return context.getStore(Namespace.create(testClassName, testMethodName));
+    }
+
+}
+
+~~~
 참고
 - [extensions](https://junit.org/junit5/docs/current/user-guide/#extensions)
 
 ## JUnit5: JUnit4 마이그레이션
-junit-vintage-engine 을 의존성으로 추가하면, JUnit5의 junit-platform으로 JUnit3과 4로 작성된 테스트를 실행 할 수 있다.
+junit-vintage-engine 을 의존성으로 추가하면, JUnit5의 junit-platform으로 JUnit3과 4로 작성된 테스트를 실행 할 수 있다.(완벽하게 옮겨지지 않음)
 - @Rule은 기본적으로 지원하지 않지만, junit-jupiter-migrationsupport 모듈이 제공하는
 @EnableRuleMigrationSupport 를 사용하면 다음 타입의 Rule을 지원한다.
 - ExternalResource
@@ -425,9 +511,102 @@ JUnit4
 JUnit5
 - @Tag(String)
 - @ExtendWith, @RegisterExtension
-- Disabled
+- @Disabled
 - @BeforeEach , @AfterEach, @BeforeAll, @AfterAll
 
+JUnit4 -> JUnit5 로 변경할 경우 
+@RunWith -> 제거해도됨
 
+## JUnit5: 연습 문제 
+1.테스트 이름을 표기하는 방법으로 공백, 특수문자 등 자유롭게 쓸 수 있는 애노테이션은?
+답: @DisplayName
 
+2.JUnit5, jupiter는 크게 세가지 모듈로 나눌 수 있습니다. 다음중에서 테스트를 실행하는 런처와 테스트 엔진의 
+API 제공하는 모듈은 무엇일까요?
+답:3번 junit platform
+1.junit jupiter 2.junit vintage 3.junit platform
+
+3.JUnit5 에서 테스트 그룹을 만들고 필터링 하여 실행하는데 사용하는 애노테이션은?
+답 :@Tag
+
+4.다음코드는 여러 Assertion을 모두 실행하려는 테스트 코드입니다 빈칸에 적절한 코드는 무엇인가요?
+답: assertAll
+~~~
+@Test
+@DisplayName("스터디 만들기")
+void create_new_study() {
+    Study actual = new Study(1,"테스트 스터디");
+    _________(
+       () -> assertEquals(1, actual.getLimit()),
+       () -> assertEquals("테스트 스터디", actual.getName()),
+       () -> assertEquals(StudyStatus.DRAFT, actual.getStatus())
+    );
+}
+~~~
+
+5.다음은 JUnit5 가 제공하는 애노테이션으로 컴포짓 애노테이션을 만드는 코드입니다. 이 애노테이션의 적절한 Rention 전략은 무엇인가요?
+답:RetentionPolicy.RUNTIME
+~~~java
+@Target(ElementType.METHOD)
+@Retention(____________)
+@Test
+@Tag("fast")
+public @interfase FastTest{
+}
+~~~
+
+6.다음중 JUnit5가 제공하는 확장팩 등록 방법이 아닌 것은?
+답:2번 @Rule
+1.@ExtendWith
+2.@Rule
+3.@RegisterExtension
+4.ServiceLoader
+
+7.다음 코드는 유즈케이스 테스트를 작성한 것입니다. 다음 빈칸에 적절한 코드는?
+답 PER_CLASS , OrderAnnotation
+~~~java
+@TestInstance(TestInstance.Lifecycle._________)
+@TestMethodOrder(MethodOrderer.___________.class)
+public class StudyCreateUsecaseTest {
+    
+    private Study study;
+
+    @Order(1)
+    @Test
+    @DisplayName("스터디 만들기")
+    public void create_study(){
+        study = new Study(10,"자바");
+        assertEquals(StudyStatus.DRAFT, study.getStatus());
+    }
+
+    @Order(2)
+    @Test
+    @DisplayName("스터디 공개")
+    public void publish_study() {
+        study.publish();
+        assertEquals(StudyStatus.OPENED, study.getStatus());
+        assertNotNull(Study.getOpenedDateTime());
+    }
+}
+~~~
+
+8.다음은 여러 매개변수를 바꿔가며 동일한 테스트를 실행하는 코드입니다. 빈칸에 적절한 코드는?
+답: ParameterizedTest ,AggregateWith
+~~~Java
+@Order(4)
+@DisplayName("스터디 만들기")
+@______________(name = "{index} {dispalyName} message={0}")
+@CsvSource({"10, '자바 스터디'", "20, 스프링"})
+void paramterizedTest(@_________(StudyAggregator.class) Study study) {
+    System.out.println(study);
+}
+
+static class StudyAggregator implements ArgumentsAggregator {
+    @Override
+    public Object aggregateArguments(ArgumentsAccessor accessor, ParamterContext context) 
+        throws ArgumentsAggregationException {
+        return new Study(accessor.getInteger(0), accessor.getString(1));
+    }
+}
+~~~
 

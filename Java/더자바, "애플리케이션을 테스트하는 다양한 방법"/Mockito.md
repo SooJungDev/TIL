@@ -107,7 +107,7 @@ assertNotNull(study.getOwner());
 assertEquals(member, study.getOwner());
 ~~~
 
-
+## Mock 객체 확인
 Mock 객체가 어떻게 사용이 됐는지 확인할 수 있다.
 - 특정 메소드가 특정 매개변수로 몇번 호출 되었는지, 최소 한번은 호출 됐는지, 전혀
 호출되지 않았는지
@@ -118,3 +118,32 @@ Mock 객체가 어떻게 사용이 됐는지 확인할 수 있다.
     - Verification with timeout
 - 특정 시점 이후에 아무 일도 벌어지지 않았는지
     - Finding redundant invocations
+    
+## Mockito BDD 스타일 API
+BDD: 애플리케이션이 어떻게 "핻동"해야 하는지에 대한 공통된 이해를 구성하는 방법으로, TDD에서 창안했다
+
+행동에 대한 스팩
+- Title
+- Narrative
+    - As a / I want/ so that
+- Acceptance criteria 
+    - Given / When / Then
+ 
+Mockito 는 BddMockito 라는 클래스를 통해 BDD 스타일의 API 를 제공한다
+when -> Given
+~~~java
+given(memberService.findById(1L)).willReturn(Optional.of(member));
+given(studyRepository.save(study)).willReturn(study);
+~~~
+
+verify -> Then
+~~~java
+then(memberService).should(times(1)).notify(study);
+then(memberService).sholdHaveMoreInteractions();
+~~~
+
+참고사이트
+- [Class BDDMockito](https://javadoc.io/static/org.mockito/mockito-core/3.2.0/org/mockito/BDDMockito.html)
+- https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#BDD_be
+  havior_verification
+ 

@@ -1,3 +1,18 @@
+## 톰캣 포트 확인하는 방법
+- 경로는 톰캣 위치 밑에 conf 으로 이동한다.
+- server.xml 을 열어 확인하다.
+~~~
+cd 톰캣위치/conf
+vi server.xml
+~~~
+- server.xml 파일 일부
+- protocol="HTTP/1.1" 이부분에 적혀있는 포트를 확인해준다
+~~~
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443" />
+~~~
+
 ## 멀티아이피 목록 확인하는 방법
 - 아래의 명령어를 치면 해당 서버에 멀티아이피를 확인할수있음 
 - 나올떄는 ctrl+c 로 나온다.

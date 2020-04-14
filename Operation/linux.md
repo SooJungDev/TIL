@@ -371,3 +371,35 @@ cd /var/log/nginx
 ls -al
 tail -f /var/log/nginx/access.log
 ~~~
+
+## 도메인에 관련된 프로세스 확인하기
+nginx 설정 파일을 확인한뒤 해당 도메인을 검색해본다
+~~~
+cd /etc/nginx/conf.d/
+vi  default.conf
+:/해당도메인 
+~~~
+
+netstat 명령어를 통한 네트워크 상태 확인 방법
+netstat 옵션
+-n: 포트넘버
+-a : 모두
+-p : 프로그램 이름 / PID
+-t (tcp) : tcp
+
+- 포트넘버에대한 프로그램의 pid 를 찾아냄
+~~~
+ netstat -napt | grep 8080 
+~~~
+
+- 습관적으로 사용하는 -ef 옵션 중 -e 옵션은 전체조회이다
+-e 옵션 없이 -f 옵션만 쓰고 뒤에 PID를 기입하면 해당 프로세스만 조회할 수 있다.
+- pid 1234 에 대한 프로세스만 조회하기
+~~~
+ps -f 1234
+~~~
+
+- 해당프로세스를 보면 어느경로에 어떤프로젝트인지 알 수 있음.
+
+참고사이트
+- [netstat 명령어를 통한 네트워크 상태 확인 방법](https://blog.naver.com/ncloud24/221388026417)

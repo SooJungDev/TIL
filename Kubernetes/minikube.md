@@ -8,7 +8,7 @@
 brew install kubectl minikube
 ~~~
 
-2. minikuebe 에서 vm 을 사용하기 위해 virtualbox를 설치
+2. minikube 에서 vm 을 사용하기 위해 virtualbox를 설치
 ~~~
 brew cask install virtualbox virtualbox-extension-pack
 ~~~
@@ -23,7 +23,7 @@ kubectl get services
 minikube start --vm-driver=virtualbox
 ~~~
 
-5.kubectl 명령확인하기
+5.kubectl 명령 확인하기
 - node 확인
 - pods 확인
 - service 확인
@@ -68,10 +68,10 @@ minikube start
 
 2. k8s 공식으로 제공하는 이미지파일을 통해 hello-node 라는 어플리케이션을 디플로이한다
 ~~~
-kubectl create deployment hello-node --image=gcr.io/hello-minikube-zero-install/hello-node
+kubectl create deployment hello-node --image=k8s.gcr.io/echoserver:1.4
 ~~~
 
-3. 디플로이됬는지 확인
+3. 디플로이 됬는지 확인
 ~~~
 kubectl get deployment
 kubectl get pods
@@ -104,4 +104,4 @@ kubectl delete service hello-node
 - 아래 사이트에 자세히 잘 설명해주셨음!!
 - [Minikube로 쿠버네티스 설치](https://kubernetes.io/ko/docs/setup/learning-environment/minikube/#minikube-%ed%8a%b9%ec%a7%95)
 - [Mac OS에서 minikube 사용하기 Part 1](https://judo0179.tistory.com/70?category=349244)
-- [minikube를 활용한 간단한 애플리케이션 서비스하기 PART 2](https://judo0179.tistory.com/714)
+- [minikube를 활용한 간단한 애플리케이션 서비스하기 PART 2](https://judo0179.tistory.com/71)

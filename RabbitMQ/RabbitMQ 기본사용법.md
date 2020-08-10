@@ -49,4 +49,13 @@ RabbitMQ는 AMQP 구현한 오픈소스 메시지 소프트웨어 Publisher(Prod
 - Direct Exchange : (Empty String) and amq.direct
 - Fanout Exchange :  amq.fanout
 - Topic Exchange  :  amq.topic
-- Heaser Exchange :  amq.match(and amq.headers in RabbitMQ)
+- Header Exchange :  amq.match(and amq.headers in RabbitMQ)
+
+
+## local 에서 실행하는법
+~~~
+cd /usr/local/sbin
+./rabbitmq-server
+~~~
+
+http://localhost:15672로 접근하고 username / password 로 초기값인 guest/guest 로 로그인하면된다

@@ -22,7 +22,7 @@ Simple
 Java8+ 기준으로는 guava 를 사용하지않고 Caffeine 이라는 라이브러리를 사용
 
 
-[Guava cache duplicate Java8+버젼](https://github.com/spring-projects/spring-framework/commit/2bf9bc312ed1721b5978f88861c29cffc9ea407c)
+[Guava cache remove Java8+버젼](https://github.com/spring-projects/spring-framework/commit/2bf9bc312ed1721b5978f88861c29cffc9ea407c)
 
 
 

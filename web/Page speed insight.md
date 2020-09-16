@@ -45,3 +45,7 @@ Lazy loaded 가 되었을때는 아래 클래스가 lazyloaded 로 변경됨
 ~~~
 <link rel="preload" as="style" href="css 경로"  onload="this.rel='stylesheet'">
 ~~~
+
+## 성능최적화
+좋은글인거같다
+https://ui.toast.com/fe-guide/ko_PERFORMANCE/

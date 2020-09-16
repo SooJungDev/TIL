@@ -39,3 +39,9 @@ Lazy loaded 가 되었을때는 아래 클래스가 lazyloaded 로 변경됨
 ## 이미지 최적화
 - 이미지 파일이 크면 클수록 느려짐
 - 이미지 파일을 최대한 작게끔 PageSpeed Insights 사이트에서 권장하는 이미지 확장자를 사용하는것이좋음
+
+## Eliminate render blocking css
+- 아래와 같은 방법으로 개선함
+~~~
+<link rel="preload" as="style" href="css 경로"  onload="this.rel='stylesheet'">
+~~~

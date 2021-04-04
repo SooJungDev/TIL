@@ -8,6 +8,12 @@
 - 글도 이해하고 적기
 - 그림을 할수없이 가져온다면 출처 적기
 
+## 스터디 종료후
+- 티셔츠 받았다!!! ㅎㅎ
+  
+![IMG_0684](https://user-images.githubusercontent.com/38197944/113511826-c9eb2600-959c-11eb-987c-91c673c17e31.jpg)
+
+
 ## 링크
 - [whiteship/live-study](https://github.com/whiteship/live-study)
   

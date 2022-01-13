@@ -187,4 +187,107 @@ Node-> Alice
 
 ## Contract = Code + Data
 - Solidity 컨트랙트 코드(함수)와 데이터(상태)로 구성
-- Solidity 함수는 코드안에 변수로 선언된 상태를 변경하거나 불러옴 
+- Solidity 함수는 코드안에 변수로 선언된 상태를 변경하거나 불러옴
+
+## ByteCode & ABI
+- Solidity 소스코드(.sol파일)를 컴파일하면 Bytecode(.bin파일)와 ABI(.abi파일)가 생성
+
+Bytecode
+- 컨트랙트를 배포할때 블록체인에 저장하는 정보
+- Bytecode는 Solidity 소스코드를 EVM이 이해할 수 있는 형태로 변환한것
+- 컨트랙트 배포시 HEX로 표현된 Bytecode 를 TX에 담아 노드에 전달
+
+ABI(Application BinaryInterface) a.k.a JSON interface
+- ABI는 컨트랙트 함수를 JSON형태로 표현한 정보로 EVM이 컨트랙트함수를 실행할때 필요
+- 컨트랙트 함수를 실행하려는 사람은 ABI정보를 노드에 제공
+
+## Blockchain Application (BApp)
+- 블록체인 어플리케이션(BApp)은 블록체인을 사용하는 어플리케이션
+  - 기존의 기술로 풀기 어려운 문제들을 블록체인의 특성을 활용하여 풀어내는 것이 목적
+- 불변성과 투명성이 대표적인 블록체인의 특성
+  - 한번 기록된 정보는 변경 할 수 없으며
+  - 정해진 규칙(e.g 블록생성등 프로토콜이 가진 규칙, 컨트랙트로 구현된 규칙)에 따 라 상태를 변경
+  - 기록의 내역이 블록에 공개되어 있으므로 누구든지 정보의 진실여부를 확인 가능
+
+## Fully Decentralized
+- 장점 :
+  - 높은 투명성
+  - 신뢰형성에 필요한 비용 x
+  - 경우에 따라 사용자의 익명성 보장 가능
+  - 관리비용 낮음
+- 단점 :
+  - 사용자 책임증가 X, 어려운 UX
+  - 로직변경 어려움
+  - 경우에 따라 사용자가 블록체인에 상시 접속할 필요및 블록을 복제할 필요 있음
+
+## Semi-Decentralized with Centralized Proxy
+- 장점 :
+  - 높은 수준의 UX
+  - 사용자가 블록체인과 직접 통신할 필요 없음
+  - 로직 변경 비교적 쉬움
+
+- 단점:
+  - 신뢰비용 발생
+  - 서비스가 Single Point of Failure(SPoF) 가 됨
+  - 관리비용 높음
+
+## 지갑(Wallet)
+- TX를 서명하려면 키가 필요
+  - 키 -> 어카운트
+  - 서로 다른키는 다른 어카운트에 매핑
+  - 하나의 어카운트로 여러 BApp을 사용하려는 사용자의 니즈가 존재
+- 지갑 = 키를 관리하는 프로그램
+  - 키를 보관하고 BApp이 요청할대마다 보관중인 키로 TX를 서명
+  - 여려 유형의 지갑이 존재
+    - 브라우저 플러그인, Dapp 브라우저 내장 지갑, 클라우드 지갑, 디바이스 지갑
+
+## Unique Electronic Assets
+- 블록체인의 불변성을 사용하여 복제불가능한 디지털 데이터를 생성
+- Non-Fungible Token(NFT)
+  - NFT를 사용하여 중앙화된 관리 없이 각각이 유일한 한정수량 상품을 개발기능
+  - 상품권,증명서,바우처,Collectibles 수량이 제한되어 있는 게임 아이템 제작등
+
+
+## Error Handling
+- assert(bool condition) : condition이 false일 경우 실행 중인 함수가 변경된 내역을 모두 이전 상태로 되돌림(로직체크에 사용)
+- require(bool condition) : condition이 false일 경우 실행 중인 함수가 변경한 내역을 모두 이전 상태로 되돌림(외부 변수 검증에 사용)
+- require(bool condition, string memory message): require(bool)과 동일. 추가로 메세지 전달
+
+## Cryptographic Functions
+- 가스비 많이먹는 3대장 가급적 안쓰는것이 좋음
+- keccak256(bytes memory) returns (byte32): 주어진 값으로 Keccak-256 해시를 생성
+- sha256(bytes memory) returns (byte32): 주어진 값으로 SHA-256 해시를 생성
+- ecrecover(byte32 hash, uint8 v, byte32 r, byte32 s) returns (address) :
+   서명(v,r,s)으로 부터 어카운트 주소를 도출(서명 => 공개키 => 주소)
+
+## Expression and Control Structures
+- 예외처리 기능이 없음 (try-catch)없음
+- contract 간결하게 짜야됨
+
+## Creating Contract
+- 일반적인 컨트랙트 생성 => 배포
+- 컨트랙트를 클래스처럼 사용
+  - 컨트랙트를 객체지향 프로그래밍에서 사용하는 클래스로 취급 할 수 있음
+  - new 키워드를 사용하여 컨트랙트를 생성하여 변수에 대입
+
+## Visibility and Getters
+- 함수의 공개정도를 목적에 맞게 썰정
+- external
+  - 다른 컨트랙트에서 & 트랜잭션을 ㅌ오해 호출가능
+  - internal 호출 불가능 (i.e f()는 안되지만 this.f()는 허용됨)
+- public
+  - 트랜잭션을 통해 호출가능, internal 호출 가능
+- internal
+  - 외부에서 호출 불가능 internal 호출가능 상속받은 컨트랙트에서 호출 가능
+- private
+  - internal 호출 가능
+
+## Function Declarations: pure vs view
+- 함수 제약을 설정하여 정해진 scope에서 동작 할 수 있도록 설정
+- pure
+  - State Variable 접근불가 Read(X), Write(X)
+- view
+  - State Variable 변경불가 Read(O), Write(X)
+- (none)
+  - 제약 없음 Read(O), Write(O)
+
